@@ -10,32 +10,20 @@ namespace StepFlow.Core
         public IWorkflowBuilder<TData> Step<TStep>()
             where TStep : IStep
         {
-            WorkflowStep<TStep, TData> workflowStep = new((_, _) => { }, (_, _) => { });
-            _steps.Add(workflowStep);
+            StepPropertyMapper<TStep, TData> propertyMapper = new();
+            WorkflowStep<TStep, TData> step = new(propertyMapper);
+            _steps.Add(step);
             return this;
         }
 
-        public IWorkflowBuilder<TData> Step<TStep>(Action<TStep> stepSetup)
+        public IWorkflowBuilder<TData> Step<TStep>(Action<IStepPropertyMapper<TStep, TData>> mapperAction)
             where TStep : IStep
         {
-            WorkflowStep<TStep, TData> workflowStep = new((step, _) => stepSetup(step), (_, _) => { });
-            _steps.Add(workflowStep);
-            return this;
-        }
+            StepPropertyMapper<TStep, TData> propertyMapper = new();
+            mapperAction(propertyMapper);
 
-        public IWorkflowBuilder<TData> Step<TStep>(Action<TStep, TData> stepSetup)
-            where TStep : IStep
-        {
-            WorkflowStep<TStep, TData> workflowStep = new(stepSetup, (_, _) => { });
-            _steps.Add(workflowStep);
-            return this;
-        }
-
-        public IWorkflowBuilder<TData> Step<TStep>(Action<TStep, TData> stepSetup, Action<TData, TStep> stepResult)
-            where TStep : IStep
-        {
-            WorkflowStep<TStep, TData> workflowStep = new(stepSetup, stepResult);
-            _steps.Add(workflowStep);
+            WorkflowStep<TStep, TData> step = new(propertyMapper);
+            _steps.Add(step);
             return this;
         }
 

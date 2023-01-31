@@ -8,14 +8,16 @@ public class SomeWorkflow : IWorkflow<WorkflowData>
     {
         builder
             .Step<FirstStep>()
-            .Step<PrintStep>(step => { step.Line = "Hello, StepFlow!"; })
-            .Step<PrintStep>((step, data) => { step.Line = data.LineToPrint; })
-            .Step<SumStep>((step, data) =>
-            {
-                step.Number1 = data.Number1;
-                step.Number2 = 4;
-            }, (data, step) => { data.SumResult = step.Result; })
-            .Step<PrintStep>((step, data) => { step.Line = data.SumResult.ToString(); })
+            .Step<PrintStep>(m => m
+                .Input(step => step.Line, _ => "Hello, StepFlow!"))
+            .Step<PrintStep>(m => m
+                .Input(step => step.Line, data => data.LineToPrint))
+            .Step<SumStep>(m => m
+                .Input(step => step.Number1, data => data.Number1)
+                .Input(step => step.Number2, _ => 4)
+                .Output(data => data.SumResult, step => step.Result))
+            .Step<PrintStep>(m => m
+                .Input(step => step.Line, data => data.SumResult.ToString()))
             .Step<SecondStep>();
     }
 }
