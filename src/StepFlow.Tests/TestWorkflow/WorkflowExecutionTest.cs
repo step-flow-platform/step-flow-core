@@ -26,6 +26,7 @@ public class WorkflowExecutionTest
         services.AddTransient<FirstStep>();
         services.AddTransient<SecondStep>();
         services.AddTransient<PrintStep>();
+        services.AddTransient<SumStep>();
 
         IServiceProvider serviceProvider = services.BuildServiceProvider();
         return serviceProvider;

@@ -10,7 +10,7 @@ namespace StepFlow.Core
         public IWorkflowBuilder<TData> Step<TStep>()
             where TStep : IStep
         {
-            WorkflowStep<TStep, TData> workflowStep = new((_, _) => { });
+            WorkflowStep<TStep, TData> workflowStep = new((_, _) => { }, (_, _) => { });
             _steps.Add(workflowStep);
             return this;
         }
@@ -18,7 +18,7 @@ namespace StepFlow.Core
         public IWorkflowBuilder<TData> Step<TStep>(Action<TStep> stepSetup)
             where TStep : IStep
         {
-            WorkflowStep<TStep, TData> workflowStep = new((step, _) => stepSetup(step));
+            WorkflowStep<TStep, TData> workflowStep = new((step, _) => stepSetup(step), (_, _) => { });
             _steps.Add(workflowStep);
             return this;
         }
@@ -26,7 +26,15 @@ namespace StepFlow.Core
         public IWorkflowBuilder<TData> Step<TStep>(Action<TStep, TData> stepSetup)
             where TStep : IStep
         {
-            WorkflowStep<TStep, TData> workflowStep = new(stepSetup);
+            WorkflowStep<TStep, TData> workflowStep = new(stepSetup, (_, _) => { });
+            _steps.Add(workflowStep);
+            return this;
+        }
+
+        public IWorkflowBuilder<TData> Step<TStep>(Action<TStep, TData> stepSetup, Action<TData, TStep> stepResult)
+            where TStep : IStep
+        {
+            WorkflowStep<TStep, TData> workflowStep = new(stepSetup, stepResult);
             _steps.Add(workflowStep);
             return this;
         }

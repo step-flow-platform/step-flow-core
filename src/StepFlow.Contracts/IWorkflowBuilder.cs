@@ -13,5 +13,8 @@ namespace StepFlow.Contracts
 
         IWorkflowBuilder<TData> Step<TStep>(Action<TStep, TData> stepSetup)
             where TStep : IStep;
+
+        IWorkflowBuilder<TData> Step<TStep>(Action<TStep, TData> stepSetup, Action<TData, TStep> stepResult)
+            where TStep : IStep;
     }
 }
