@@ -1,7 +1,12 @@
 namespace StepFlow.Contracts
 {
-    public interface IWorkflow
+    public interface IWorkflow<TData>
+        where TData : new()
     {
-        void Build(IWorkflowBuilder builder);
+        void Build(IWorkflowBuilder<TData> builder);
+    }
+
+    public interface IWorkflow : IWorkflow<object>
+    {
     }
 }
