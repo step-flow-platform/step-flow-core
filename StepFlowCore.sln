@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StepFlow.Contracts", "src\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StepFlow.Tests", "src\StepFlow.Tests\StepFlow.Tests.csproj", "{C2FE550E-A322-410C-AC1F-FB7A54EF3075}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StepFlow.Dsl", "src\StepFlow.Dsl\StepFlow.Dsl.csproj", "{8C2C828E-6568-4558-9406-A4F3943CAF49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{C2FE550E-A322-410C-AC1F-FB7A54EF3075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2FE550E-A322-410C-AC1F-FB7A54EF3075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2FE550E-A322-410C-AC1F-FB7A54EF3075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C2C828E-6568-4558-9406-A4F3943CAF49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C2C828E-6568-4558-9406-A4F3943CAF49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C2C828E-6568-4558-9406-A4F3943CAF49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C2C828E-6568-4558-9406-A4F3943CAF49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

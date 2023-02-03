@@ -2,37 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using StepFlow.Contracts;
+using StepFlow.Contracts.Definitions;
 
 namespace StepFlow.Core;
 
-internal class StepPropertyMapper<TStep, TData> : IStepPropertyMapper<TStep, TData>
+internal class StepPropertyMapper<TStep, TData> : IStepPropertyMapper<TStep, TData>, IStepPropertiesAccessor
     where TStep : IStep
 {
     public IStepPropertyMapper<TStep, TData> Input<TInput>(Expression<Func<TStep, TInput>> stepProperty,
         Expression<Func<TData, TInput>> value)
     {
-        _inputs.Add(new PropertyAssigner(value, stepProperty));
+        _input.Add(new PropertyMap(value, stepProperty));
         return this;
     }
 
     public void Output<TInput>(Expression<Func<TData, TInput>> value, Expression<Func<TStep, TInput>> stepProperty)
     {
-        _output = new PropertyAssigner(stepProperty, value);
+        _output = new PropertyMap(stepProperty, value);
     }
 
-    public void MapInputs(TStep step, object data)
+    public List<PropertyMap> GetInput()
     {
-        foreach (PropertyAssigner input in _inputs)
-        {
-            input.Assign(data, step);
-        }
+        return _input;
     }
 
-    public void MapOutput(TStep step, object data)
+    public PropertyMap? GetOutput()
     {
-        _output?.Assign(step, data);
+        return _output;
     }
 
-    private readonly List<PropertyAssigner> _inputs = new();
-    private PropertyAssigner? _output;
+    private readonly List<PropertyMap> _input = new();
+    private PropertyMap? _output;
 }

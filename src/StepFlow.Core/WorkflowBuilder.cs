@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StepFlow.Contracts;
+using StepFlow.Contracts.Definitions;
 
 namespace StepFlow.Core
 {
@@ -11,8 +13,8 @@ namespace StepFlow.Core
             where TStep : IStep
         {
             StepPropertyMapper<TStep, TData> propertyMapper = new();
-            WorkflowStep<TStep, TData> step = new(propertyMapper);
-            _steps.Add(step);
+            WorkflowStepBuilder stepBuilder = new WorkflowStepBuilder(typeof(TStep), propertyMapper);
+            _stepBuilders.Add(stepBuilder);
             return this;
         }
 
@@ -22,16 +24,21 @@ namespace StepFlow.Core
             StepPropertyMapper<TStep, TData> propertyMapper = new();
             mapperAction(propertyMapper);
 
-            WorkflowStep<TStep, TData> step = new(propertyMapper);
-            _steps.Add(step);
+            WorkflowStepBuilder stepBuilder = new WorkflowStepBuilder(typeof(TStep), propertyMapper);
+            _stepBuilders.Add(stepBuilder);
             return this;
         }
 
-        public List<IWorkflowStep> GetSteps()
+        public WorkflowDefinition Build()
         {
-            return _steps;
+            WorkflowDefinition definition = new(typeof(TData))
+            {
+                Steps = _stepBuilders.Select(stepBuilder => stepBuilder.Build()).ToList()
+            };
+
+            return definition;
         }
 
-        private readonly List<IWorkflowStep> _steps = new();
+        private readonly List<WorkflowStepBuilder> _stepBuilders = new();
     }
 }

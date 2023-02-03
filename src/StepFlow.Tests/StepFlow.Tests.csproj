@@ -18,6 +18,13 @@
   <ItemGroup>
     <ProjectReference Include="..\StepFlow.Contracts\StepFlow.Contracts.csproj" />
     <ProjectReference Include="..\StepFlow.Core\StepFlow.Core.csproj" />
+    <ProjectReference Include="..\StepFlow.Dsl\StepFlow.Dsl.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestWorkflow\json-workflow.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
