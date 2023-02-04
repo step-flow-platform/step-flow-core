@@ -6,10 +6,10 @@ using StepFlow.Contracts.Definitions;
 
 namespace StepFlow.Core;
 
-internal class StepPropertyMapper<TStep, TData> : IStepPropertyMapper<TStep, TData>, IStepPropertiesAccessor
+internal class StepPropertyBuilder<TStep, TData> : IStepPropertyBuilder<TStep, TData>, IStepPropertyBuilder
     where TStep : IStep
 {
-    public IStepPropertyMapper<TStep, TData> Input<TInput>(Expression<Func<TStep, TInput>> stepProperty,
+    public IStepPropertyBuilder<TStep, TData> Input<TInput>(Expression<Func<TStep, TInput>> stepProperty,
         Expression<Func<TData, TInput>> value)
     {
         _input.Add(new PropertyMap(value, stepProperty));
@@ -31,6 +31,21 @@ internal class StepPropertyMapper<TStep, TData> : IStepPropertyMapper<TStep, TDa
         return _output;
     }
 
+    public WorkflowStepDefinition Build()
+    {
+        WorkflowStepDefinition definition = new(typeof(TStep))
+        {
+            Input = _input,
+            Output = _output
+        };
+        return definition;
+    }
+
     private readonly List<PropertyMap> _input = new();
     private PropertyMap? _output;
+}
+
+internal interface IStepPropertyBuilder
+{
+    public WorkflowStepDefinition Build();
 }

@@ -8,7 +8,7 @@ namespace StepFlow.Contracts
         IWorkflowBuilder<TData> Step<TStep>()
             where TStep : IStep;
 
-        IWorkflowBuilder<TData> Step<TStep>(Action<IStepPropertyMapper<TStep, TData>> propertyMapper)
+        IWorkflowBuilder<TData> Step<TStep>(Action<IStepPropertyBuilder<TStep, TData>> propertyMapper)
             where TStep : IStep;
     }
 }

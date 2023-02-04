@@ -12,20 +12,18 @@ namespace StepFlow.Core
         public IWorkflowBuilder<TData> Step<TStep>()
             where TStep : IStep
         {
-            StepPropertyMapper<TStep, TData> propertyMapper = new();
-            WorkflowStepBuilder stepBuilder = new WorkflowStepBuilder(typeof(TStep), propertyMapper);
-            _stepBuilders.Add(stepBuilder);
+            StepPropertyBuilder<TStep, TData> propertyBuilder = new();
+            _steps.Add(propertyBuilder);
             return this;
         }
 
-        public IWorkflowBuilder<TData> Step<TStep>(Action<IStepPropertyMapper<TStep, TData>> mapperAction)
+        public IWorkflowBuilder<TData> Step<TStep>(Action<IStepPropertyBuilder<TStep, TData>> mapperAction)
             where TStep : IStep
         {
-            StepPropertyMapper<TStep, TData> propertyMapper = new();
-            mapperAction(propertyMapper);
+            StepPropertyBuilder<TStep, TData> propertyBuilder = new();
+            mapperAction(propertyBuilder);
 
-            WorkflowStepBuilder stepBuilder = new WorkflowStepBuilder(typeof(TStep), propertyMapper);
-            _stepBuilders.Add(stepBuilder);
+            _steps.Add(propertyBuilder);
             return this;
         }
 
@@ -33,12 +31,12 @@ namespace StepFlow.Core
         {
             WorkflowDefinition definition = new(typeof(TData))
             {
-                Steps = _stepBuilders.Select(stepBuilder => stepBuilder.Build()).ToList()
+                Steps = _steps.Select(stepBuilder => stepBuilder.Build()).ToList()
             };
 
             return definition;
         }
 
-        private readonly List<WorkflowStepBuilder> _stepBuilders = new();
+        private readonly List<IStepPropertyBuilder> _steps = new();
     }
 }
