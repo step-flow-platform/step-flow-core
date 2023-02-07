@@ -18,6 +18,11 @@ public class SomeWorkflow : IWorkflow<WorkflowData>
                 .Output(data => data.SumResult, step => step.Result))
             .Step<PrintStep>(m => m
                 .Input(step => step.Line, data => data.SumResult.ToString()))
+            .If(data => data.SumResult > 5, x => x
+                .Step<FirstStep>()
+                .Step<PrintStep>(m => m
+                    .Input(step => step.Line, _ => "SumResult is greater then 5"))
+                .Step<SecondStep>())
             .Step<SecondStep>();
     }
 }

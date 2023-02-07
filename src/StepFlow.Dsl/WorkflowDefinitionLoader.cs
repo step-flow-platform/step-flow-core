@@ -31,46 +31,50 @@ namespace StepFlow.Dsl
 
         private WorkflowDefinition Convert(WorkflowDefinitionModel model)
         {
-            Type dataType = typeof(object);
-            if (model.Data is not null)
-            {
-                string dataTypeName = $"{_options.DataNamespace}.{model.Data}, {_options.AssemblyName}";
-                dataType = Type.GetType(dataTypeName, true, true)!;
-            }
-
-            WorkflowDefinition definition = new(dataType);
-            foreach (WorkflowStepModel stepModel in model.Steps)
-            {
-                definition.Steps.Add(ConvertStep(stepModel, dataType));
-            }
-
-            return definition;
+            // Type dataType = typeof(object);
+            // if (model.Data is not null)
+            // {
+            //     string dataTypeName = $"{_options.DataNamespace}.{model.Data}, {_options.AssemblyName}";
+            //     dataType = Type.GetType(dataTypeName, true, true)!;
+            // }
+            //
+            // WorkflowBranchDefinition mainBranch = new();
+            // foreach (WorkflowStepModel stepModel in model.Steps)
+            // {
+            //     mainBranch.Steps.Add(ConvertStep(stepModel, dataType));
+            // }
+            //
+            // WorkflowDefinition definition = new(dataType);
+            // definition.Branches.Add(mainBranch);
+            // return definition;
+            return null!;
         }
 
         private WorkflowStepDefinition ConvertStep(WorkflowStepModel model, Type dataType)
         {
-            string typeName = $"{_options.StepsNamespace}.{model.Name}, {_options.AssemblyName}";
-            Type stepType = Type.GetType(typeName, true, true)!;
-            WorkflowStepDefinition stepDefinition = new(stepType);
-
-            if (model.Input is not null)
-            {
-                foreach (KeyValuePair<string, object> inputPropertyPair in model.Input)
-                {
-                    PropertyMap inputPropertyMap = ConvertPropertyMap(dataType, inputPropertyPair.Value.ToString(),
-                        "data", stepType, inputPropertyPair.Key);
-                    stepDefinition.Input.Add(inputPropertyMap);
-                }
-            }
-
-            if (model.Output is not null)
-            {
-                (string dataPropertyName, object expression) = model.Output.Single();
-                stepDefinition.Output =
-                    ConvertPropertyMap(stepType, expression.ToString(), "step", dataType, dataPropertyName);
-            }
-
-            return stepDefinition;
+            // string typeName = $"{_options.StepsNamespace}.{model.Name}, {_options.AssemblyName}";
+            // Type stepType = Type.GetType(typeName, true, true)!;
+            // WorkflowStepDefinition stepDefinition = new(stepType);
+            //
+            // if (model.Input is not null)
+            // {
+            //     foreach (KeyValuePair<string, object> inputPropertyPair in model.Input)
+            //     {
+            //         PropertyMap inputPropertyMap = ConvertPropertyMap(dataType, inputPropertyPair.Value.ToString(),
+            //             "data", stepType, inputPropertyPair.Key);
+            //         stepDefinition.Input.Add(inputPropertyMap);
+            //     }
+            // }
+            //
+            // if (model.Output is not null)
+            // {
+            //     (string dataPropertyName, object expression) = model.Output.Single();
+            //     stepDefinition.Output =
+            //         ConvertPropertyMap(stepType, expression.ToString(), "step", dataType, dataPropertyName);
+            // }
+            //
+            // return stepDefinition;
+            return null!;
         }
 
         private PropertyMap ConvertPropertyMap(Type sourceType, string sourceExpression, string sourceParameterName,

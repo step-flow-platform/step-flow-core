@@ -1,18 +1,7 @@
 using System;
-using System.Collections.Generic;
 
-namespace StepFlow.Contracts.Definitions
-{
-    public class WorkflowDefinition
-    {
-        public WorkflowDefinition(Type dataType)
-        {
-            DataType = dataType;
-            Steps = new List<WorkflowStepDefinition>();
-        }
+namespace StepFlow.Contracts.Definitions;
 
-        public Type DataType { get; }
-
-        public List<WorkflowStepDefinition> Steps { get; set; }
-    }
-}
+public record WorkflowDefinition(
+    Type DataType,
+    WorkflowNodeDefinition MainBranch);

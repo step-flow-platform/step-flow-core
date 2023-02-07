@@ -33,6 +33,26 @@
             }
         },
         {
+            "name": "+If",
+            "input": {
+                "Condition": "data.SumResult > 5"
+            },
+            "do": [
+                {
+                    "name": "FirstStep"
+                },
+                {
+                    "name": "PrintStep",
+                    "input": {
+                        "Line": "\"SumResult is greater then 5\""
+                    }
+                },
+                {
+                    "name": "SecondStep"
+                }
+            ]
+        },
+        {
             "name": "SecondStep"
         }
     ]

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using StepFlow.Contracts;
 using StepFlow.Contracts.Definitions;
+using StepFlow.Core.Builders;
 
 namespace StepFlow.Core
 {
@@ -24,13 +25,39 @@ namespace StepFlow.Core
         public async Task StartWorkflow(WorkflowDefinition definition)
         {
             object data = Activator.CreateInstance(definition.DataType);
-            foreach (WorkflowStepDefinition stepDefinition in definition.Steps)
+            await ProcessBranch((WorkflowBranchDefinition)definition.MainBranch, data);
+        }
+
+        private async Task ProcessBranch(WorkflowBranchDefinition branchDefinition, object data)
+        {
+            object? conditionResult = branchDefinition.Condition?.Compile().DynamicInvoke(data);
+            if (conditionResult is false)
             {
-                IStep step = ConstructStep(stepDefinition.StepType);
-                ProcessStepInput(stepDefinition, step, data);
-                await ExecuteStep(step);
-                ProcessStepOutput(stepDefinition, step, data);
+                return;
             }
+
+            foreach (WorkflowNodeDefinition nodeDefinition in branchDefinition.Nodes)
+            {
+                switch (nodeDefinition.NodeType)
+                {
+                    case WorkflowNodeType.Branch:
+                        await ProcessBranch((WorkflowBranchDefinition)nodeDefinition, data);
+                        break;
+                    case WorkflowNodeType.Step:
+                        await ProcessStep((WorkflowStepDefinition)nodeDefinition, data);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        private async Task ProcessStep(WorkflowStepDefinition definition, object data)
+        {
+            IStep step = ConstructStep(definition.StepType);
+            ProcessStepInput(definition, step, data);
+            await ExecuteStep(step);
+            ProcessStepOutput(definition, step, data);
         }
 
         private IStep ConstructStep(Type stepType)

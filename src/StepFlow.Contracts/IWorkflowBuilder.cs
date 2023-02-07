@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 
 namespace StepFlow.Contracts
 {
@@ -8,7 +9,10 @@ namespace StepFlow.Contracts
         IWorkflowBuilder<TData> Step<TStep>()
             where TStep : IStep;
 
-        IWorkflowBuilder<TData> Step<TStep>(Action<IStepPropertyBuilder<TStep, TData>> propertyMapper)
+        IWorkflowBuilder<TData> Step<TStep>(Action<IStepBuilder<TStep, TData>> stepBuilderAction)
             where TStep : IStep;
+
+        IWorkflowBuilder<TData> If(Expression<Func<TData, bool>> condition,
+            Action<IWorkflowBuilder<TData>> ifBuilderAction);
     }
 }
