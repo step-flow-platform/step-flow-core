@@ -1,0 +1,68 @@
+{
+    "data": "WorkflowData",
+    "steps": [
+        {
+            "name": "Step1"
+        },
+        {
+            "name": "Step2",
+            "input": {
+                "Prop1": "\"SomeValue\"",
+                "Prop2": 42,
+                "Prop3": "data.StringValue"
+            }
+        },
+        {
+            "name": "Step3",
+            "input": {
+                "Prop": "\"value\""
+            },
+            "output": {
+                "StringValue": "step.Result"
+            }
+        },
+        {
+            "name": "Step1"
+        },
+        {
+            "name": "+If",
+            "Condition": "data.IntValue > 5",
+            "steps": [
+                {
+                    "name": "Step1"
+                },
+                {
+                    "name": "Step4",
+                    "input": {
+                        "PropA": "\"val-a\"",
+                        "PropB": 1990
+                    }
+                },
+                {
+                    "name": "+If",
+                    "Condition": "data.BoolValue",
+                    "steps": [
+                        {
+                            "name": "Step1"
+                        },
+                        {
+                            "name": "Step3",
+                            "input": {
+                                "Prop": "data.StringValue"
+                            },
+                            "output": {
+                                "StringValue": "step.Result"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Step1"
+                }
+            ]
+        },
+        {
+            "name": "Step3"
+        }
+    ]
+}

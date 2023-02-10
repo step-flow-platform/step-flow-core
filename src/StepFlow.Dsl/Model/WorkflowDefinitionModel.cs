@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using StepFlow.Contracts.Definitions;
 
 namespace StepFlow.Dsl.Model
 {

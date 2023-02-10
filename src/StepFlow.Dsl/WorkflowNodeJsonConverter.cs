@@ -35,14 +35,12 @@ internal class WorkflowNodeJsonConverter : JsonConverter<WorkflowNodeModel>
         }
 
         string? typeName = nodeReader.GetString();
-        WorkflowNodeModel model = typeName switch
+        return typeName switch
         {
             null => throw new JsonException(),
             "+If" => JsonSerializer.Deserialize<WorkflowBranchModel>(ref reader, options)!,
             _ => JsonSerializer.Deserialize<WorkflowStepModel>(ref reader, options)!
         };
-
-        return model;
     }
 
     public override void Write(Utf8JsonWriter writer, WorkflowNodeModel value, JsonSerializerOptions options)

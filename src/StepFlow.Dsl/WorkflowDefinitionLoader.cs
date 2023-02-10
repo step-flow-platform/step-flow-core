@@ -25,12 +25,11 @@ internal class WorkflowDefinitionLoader : IWorkflowDefinitionLoader
             throw new StepFlowException("Failed to deserialize workflow model");
         }
 
-        // WorkflowDefinition definition = Convert(model);
-        // return definition;
-        return null!;
+        WorkflowDefinition definition = Convert(model);
+        return definition;
     }
 
-    /*private WorkflowDefinition Convert(WorkflowDefinitionModel model)
+    private WorkflowDefinition Convert(WorkflowDefinitionModel model)
     {
         Type dataType = typeof(object);
         if (model.Data is not null)
@@ -39,45 +38,66 @@ internal class WorkflowDefinitionLoader : IWorkflowDefinitionLoader
             dataType = Type.GetType(dataTypeName, true, true)!;
         }
 
-        WorkflowBranchDefinition mainBranch =
-        foreach (WorkflowStepModel stepModel in model.Steps)
+        List<WorkflowNodeDefinition> mainBranchNodes = model.Steps.Select(x => ConvertNode(x, dataType)).ToList();
+        WorkflowBranchDefinition mainBranch = new(null, mainBranchNodes);
+        WorkflowDefinition definition = new(dataType, mainBranch);
+        return definition;
+    }
+
+    private WorkflowNodeDefinition ConvertNode(WorkflowNodeModel nodeModel, Type dataType)
+    {
+        return nodeModel.Name switch
         {
-            mainBranch.Steps.Add(ConvertStep(stepModel, dataType));
+            "+If" => ConvertIfBranch(nodeModel, dataType),
+            _ => ConvertStep(nodeModel, dataType)
+        };
+    }
+
+    private WorkflowBranchDefinition ConvertIfBranch(WorkflowNodeModel nodeModel, Type dataType)
+    {
+        WorkflowBranchModel? branchModel = nodeModel as WorkflowBranchModel;
+        if (branchModel is null)
+        {
+            throw new StepFlowException("Failed to load definition");
         }
 
-        WorkflowDefinition definition = new(dataType);
-        definition.Branches.Add(mainBranch);
-        return definition;
-    }*/
+        ParameterExpression conditionParameter = Expression.Parameter(dataType, "data");
+        LambdaExpression condition =
+            DynamicExpressionParser.ParseLambda(new[] { conditionParameter }, typeof(object), branchModel.Condition);
+        List<WorkflowNodeDefinition> nodes = branchModel.Steps.Select(x => ConvertNode(x, dataType)).ToList();
+        return new WorkflowBranchDefinition(condition, nodes);
+    }
 
-    /*private WorkflowBranchDefinition ConvertBranch(WorkflowBranchModel model)
+    private WorkflowStepDefinition ConvertStep(WorkflowNodeModel nodeModel, Type dataType)
     {
-    }*/
-
-    /*private WorkflowStepDefinition ConvertStep(WorkflowStepModel model, Type dataType)
-    {
-        string typeName = $"{_options.StepsNamespace}.{model.Name}, {_options.AssemblyName}";
-        Type stepType = Type.GetType(typeName, true, true)!;
-        WorkflowStepDefinition stepDefinition = new(stepType);
-
-        if (model.Input is not null)
+        WorkflowStepModel? stepModel = nodeModel as WorkflowStepModel;
+        if (stepModel is null)
         {
-            foreach (KeyValuePair<string, object> inputPropertyPair in model.Input)
+            throw new StepFlowException("Failed to load definition");
+        }
+
+        string typeName = $"{_options.StepsNamespace}.{stepModel.Name}, {_options.AssemblyName}";
+        Type stepType = Type.GetType(typeName, true, true)!;
+
+        List<PropertyMap> input = new();
+        if (stepModel.Input is not null)
+        {
+            foreach (KeyValuePair<string, object> inputPropertyPair in stepModel.Input)
             {
-                PropertyMap inputPropertyMap = ConvertPropertyMap(dataType, inputPropertyPair.Value.ToString(),
-                    "data", stepType, inputPropertyPair.Key);
-                stepDefinition.Input.Add(inputPropertyMap);
+                PropertyMap inputPropertyMap = ConvertPropertyMap(dataType, inputPropertyPair.Value.ToString(), "data",
+                    stepType, inputPropertyPair.Key);
+                input.Add(inputPropertyMap);
             }
         }
 
-        if (model.Output is not null)
+        PropertyMap? output = null;
+        if (stepModel.Output is not null)
         {
-            (string dataPropertyName, object expression) = model.Output.Single();
-            stepDefinition.Output =
-                ConvertPropertyMap(stepType, expression.ToString(), "step", dataType, dataPropertyName);
+            (string dataPropertyName, object expression) = stepModel.Output.Single();
+            output = ConvertPropertyMap(stepType, expression.ToString(), "step", dataType, dataPropertyName);
         }
 
-        return stepDefinition;
+        return new WorkflowStepDefinition(stepType, input, output);
     }
 
     private PropertyMap ConvertPropertyMap(Type sourceType, string sourceExpression, string sourceParameterName,
@@ -99,7 +119,7 @@ internal class WorkflowDefinitionLoader : IWorkflowDefinitionLoader
         LambdaExpression target = Expression.Lambda(targetFuncType, targetProperty, targetParameter);
 
         return new PropertyMap(source, target);
-    }*/
+    }
 
     private readonly WorkflowDefinitionLoaderOptions _options;
 }
