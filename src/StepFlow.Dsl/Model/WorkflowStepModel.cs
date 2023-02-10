@@ -1,13 +1,9 @@
 using System.Dynamic;
 
-namespace StepFlow.Dsl.Model
-{
-    public class WorkflowStepModel
-    {
-        public string Name { get; set; } = default!;
+namespace StepFlow.Dsl.Model;
 
-        public ExpandoObject? Input { get; set; } = default!;
-
-        public ExpandoObject? Output { get; set; } = default!;
-    }
-}
+public record WorkflowStepModel(
+        string Name,
+        ExpandoObject? Input,
+        ExpandoObject? Output)
+    : WorkflowNodeModel(Name);

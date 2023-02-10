@@ -34,9 +34,7 @@
         },
         {
             "name": "+If",
-            "input": {
-                "Condition": "data.SumResult > 5"
-            },
+            "Condition": "data.SumResult > 5",
             "do": [
                 {
                     "name": "FirstStep"

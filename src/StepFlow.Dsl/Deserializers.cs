@@ -10,11 +10,12 @@ namespace StepFlow.Dsl
         {
             get
             {
-                return source => JsonSerializer.Deserialize<WorkflowDefinitionModel>(
-                    source, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+                JsonSerializerOptions options = new()
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                options.Converters.Add(new WorkflowNodeJsonConverter());
+                return source => JsonSerializer.Deserialize<WorkflowDefinitionModel>(source, options);
             }
         }
     }

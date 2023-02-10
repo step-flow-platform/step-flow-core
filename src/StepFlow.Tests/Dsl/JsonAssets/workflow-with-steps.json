@@ -1,0 +1,25 @@
+{
+    "data": "WorkflowData",
+    "steps": [
+        {
+            "name": "SimpleStep"
+        },
+        {
+            "name": "StepWithInput",
+            "input": {
+                "SomePropStr": "StringValue",
+                "OtherPropInt": 42,
+                "PropExpr": "data.Value"
+            }
+        },
+        {
+            "name": "StepWithInputAndOutput",
+            "input": {
+                "StepProperty": "value"
+            },
+            "output": {
+                "Result": "step.Result"
+            }
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "data": "WorkflowData",
+    "steps": [
+        {
+            "name": "step1"
+        },
+        {
+            "name": "+If",
+            "Condition": "data.Result > 5",
+            "steps": [
+                {
+                    "name": "step11"
+                },
+                {
+                    "name": "step12"
+                },
+                {
+                    "name": "+If",
+                    "Condition": "data.SomeFlag",
+                    "steps": [
+                        {
+                            "name": "step111"
+                        },
+                        {
+                            "name": "step112"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "step3"
+        }
+    ]
+}

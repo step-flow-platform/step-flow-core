@@ -1,11 +1,9 @@
 using System.Collections.Generic;
+using StepFlow.Contracts.Definitions;
 
 namespace StepFlow.Dsl.Model
 {
-    public class WorkflowDefinitionModel
-    {
-        public string? Data { get; set; } = default!;
-
-        public List<WorkflowStepModel> Steps { get; set; } = default!;
-    }
+    public record WorkflowDefinitionModel(
+        string? Data,
+        List<WorkflowNodeModel> Steps);
 }
