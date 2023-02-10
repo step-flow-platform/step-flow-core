@@ -26,12 +26,12 @@ namespace StepFlow.Core.Builders
             return _mainBranchBuilder.If(condition, ifBuilderAction);
         }
 
-        public WorkflowDefinition Build()
+        public WorkflowDefinition BuildDefinition()
         {
             WorkflowDefinition definition = new(typeof(TData), _mainBranchBuilder.Build());
             return definition;
         }
 
-        private WorkflowBranchBuilder<TData> _mainBranchBuilder = new();
+        private readonly WorkflowBranchBuilder<TData> _mainBranchBuilder = new();
     }
 }

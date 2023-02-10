@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StepFlow.Core;
 
-namespace StepFlow.Tests;
+namespace StepFlow.Tests.Core;
 
 [TestClass]
 public class PropertyAssignerTest

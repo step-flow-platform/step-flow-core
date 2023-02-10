@@ -18,7 +18,7 @@ namespace StepFlow.Core
         {
             WorkflowBuilder<TData> builder = new();
             workflow.Build(builder);
-            WorkflowDefinition definition = builder.Build();
+            WorkflowDefinition definition = builder.BuildDefinition();
             await StartWorkflow(definition);
         }
 

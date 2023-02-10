@@ -1,26 +1,20 @@
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StepFlow.Contracts.Definitions;
-using StepFlow.Dsl;
+using StepFlow.Core.Builders;
+using StepFlow.Tests.TestWorkflowTypes;
 
-namespace StepFlow.Tests.Dsl;
+namespace StepFlow.Tests.Core;
 
 [TestClass]
-public class WorkflowDefinitionLoaderTest
+public class WorkflowBuilderTest
 {
     [TestMethod]
-    public void LoadJsonDefinition()
+    public void BuildWorkflowDefinition()
     {
-        string json = File.ReadAllText("Dsl/JsonAssets/test-workflow.json");
-
-        WorkflowDefinitionLoaderOptions loaderOptions = new()
-        {
-            AssemblyName = "StepFlow.Tests",
-            DataNamespace = "StepFlow.Tests.TestWorkflowTypes",
-            StepsNamespace = "StepFlow.Tests.TestWorkflowTypes.Steps"
-        };
-        WorkflowDefinitionLoader loader = new(loaderOptions);
-        WorkflowDefinition definition = loader.Load(json, Deserializers.Json);
+        WorkflowBuilder<WorkflowData> builder = new();
+        TestWorkflow workflow = new();
+        workflow.Build(builder);
+        WorkflowDefinition definition = builder.BuildDefinition();
 
         Assert.AreEqual("StepFlow.Tests.TestWorkflowTypes.WorkflowData", definition.DataType.FullName);
         Assert.AreEqual(WorkflowNodeType.Branch, definition.MainBranch.NodeType);
