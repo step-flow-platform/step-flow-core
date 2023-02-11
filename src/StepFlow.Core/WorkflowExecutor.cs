@@ -13,18 +13,18 @@ namespace StepFlow.Core
             _serviceProvider = serviceProvider;
         }
 
-        public async Task StartWorkflow<TData>(IWorkflow<TData> workflow)
+        public async Task StartWorkflow<TData>(IWorkflow<TData> workflow, TData? data = default)
             where TData : new()
         {
             WorkflowBuilder<TData> builder = new();
             workflow.Build(builder);
             WorkflowDefinition definition = builder.BuildDefinition();
-            await StartWorkflow(definition);
+            await StartWorkflow(definition, data);
         }
 
-        public async Task StartWorkflow(WorkflowDefinition definition)
+        public async Task StartWorkflow(WorkflowDefinition definition, object? data = null)
         {
-            object data = Activator.CreateInstance(definition.DataType);
+            data ??= Activator.CreateInstance(definition.DataType);
             await ProcessBranch((WorkflowBranchDefinition)definition.MainBranch, data);
         }
 
