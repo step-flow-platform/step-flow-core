@@ -14,5 +14,7 @@ namespace StepFlow.Contracts
 
         IWorkflowBuilder<TData> If(Expression<Func<TData, bool>> condition,
             Action<IWorkflowBuilder<TData>> ifBuilderAction);
+
+        IWorkflowBuilder<TData> GoTo(string stepId);
     }
 }

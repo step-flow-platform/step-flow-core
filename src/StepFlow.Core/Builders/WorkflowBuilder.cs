@@ -26,6 +26,11 @@ namespace StepFlow.Core.Builders
             return _mainBranchBuilder.If(condition, ifBuilderAction);
         }
 
+        public IWorkflowBuilder<TData> GoTo(string stepId)
+        {
+            return _mainBranchBuilder.GoTo(stepId);
+        }
+
         public WorkflowDefinition BuildDefinition()
         {
             WorkflowDefinition definition = new(typeof(TData), _mainBranchBuilder.Build());

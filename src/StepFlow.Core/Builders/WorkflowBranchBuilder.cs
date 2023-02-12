@@ -46,6 +46,11 @@ internal class WorkflowBranchBuilder<TData> : IWorkflowBuilder<TData>, IWorkflow
         return this;
     }
 
+    public IWorkflowBuilder<TData> GoTo(string stepId)
+    {
+        throw new NotImplementedException();
+    }
+
     public WorkflowNodeDefinition Build()
     {
         IEnumerable<WorkflowNodeDefinition> nodes = _steps.Select(stepBuilder => stepBuilder.Build()).ToList();

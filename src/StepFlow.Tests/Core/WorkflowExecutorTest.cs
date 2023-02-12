@@ -64,6 +64,18 @@ public class WorkflowExecutorTest
         Assert.AreEqual(18, data.ResultValue);
     }
 
+    [TestMethod]
+    public async Task GotoWorkflowScenario1()
+    {
+        IServiceProvider serviceProvider = ConfigureServices();
+        IWorkflowExecutor workflowExecutor = serviceProvider.GetService<IWorkflowExecutor>()!;
+
+        GotoWorkflow.GotoWorkflowData data = new();
+        await workflowExecutor.StartWorkflow(new GotoWorkflow(), data);
+
+        Assert.AreEqual(3, data.Value);
+    }
+
     private static IServiceProvider ConfigureServices()
     {
         IServiceCollection services = new ServiceCollection();

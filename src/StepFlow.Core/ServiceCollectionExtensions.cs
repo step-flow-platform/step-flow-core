@@ -7,7 +7,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddStepFlow(this IServiceCollection services)
     {
-        services.AddTransient<IfStep>();
         services.AddSingleton<IWorkflowExecutor, WorkflowExecutor>();
         return services;
     }

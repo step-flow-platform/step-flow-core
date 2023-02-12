@@ -44,8 +44,8 @@ public class FlowchartGeneratorTest
 
     private class WorkflowData
     {
-        public int A { get; set; }
+        public int A { get; set; } = default;
 
-        public int B { get; set; }
+        public int B { get; set; } = default;
     }
 }

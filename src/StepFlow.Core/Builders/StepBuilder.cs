@@ -9,6 +9,11 @@ namespace StepFlow.Core.Builders;
 internal class StepBuilder<TStep, TData> : IStepBuilder<TStep, TData>, IWorkflowNodeBuilder
     where TStep : IStep
 {
+    public IStepBuilder<TStep, TData> Id(string id)
+    {
+        throw new NotImplementedException();
+    }
+
     public IStepBuilder<TStep, TData> Input<TInput>(Expression<Func<TStep, TInput>> stepProperty,
         Expression<Func<TData, TInput>> value)
     {
