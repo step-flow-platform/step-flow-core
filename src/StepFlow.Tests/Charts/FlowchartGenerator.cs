@@ -73,7 +73,7 @@ public class FlowchartGenerator
     private NodeModel ConvertBranch(WorkflowBranchDefinition branchDefinition)
     {
         string id = $"node{++_nodeCounter}";
-        string condition = branchDefinition.Condition is not null ? branchDefinition.Condition.ToString() : " ";
+        string condition = branchDefinition.Condition is not null ? $"\"{branchDefinition.Condition.Body}\"" : " ";
         return new NodeModel(id, condition, NodeTypeModel.If);
     }
 

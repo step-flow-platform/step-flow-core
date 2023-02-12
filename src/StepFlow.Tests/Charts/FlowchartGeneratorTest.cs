@@ -12,7 +12,7 @@ public class FlowchartGeneratorTest
     [TestMethod]
     public void GenerateFlowchart()
     {
-        WorkflowBuilder<object> builder = new();
+        WorkflowBuilder<WorkflowData> builder = new();
         Workflow workflow = new();
         workflow.Build(builder);
         WorkflowDefinition definition = builder.BuildDefinition();
@@ -23,22 +23,29 @@ public class FlowchartGeneratorTest
         Assert.IsFalse(string.IsNullOrEmpty(flowchart));
     }
 
-    private class Workflow : IWorkflow
+    private class Workflow : IWorkflow<WorkflowData>
     {
-        public void Build(IWorkflowBuilder<object> builder)
+        public void Build(IWorkflowBuilder<WorkflowData> builder)
         {
             builder
                 .Step<Step1>()
-                .If(_ => true, _ => _
+                .If(data => data.A > 5, _ => _
                     .Step<Step1>())
-                .If(_ => true, _ => _
+                .If(data => data.B > 10, _ => _
                     .Step<Step1>()
-                    .If(_ => true, __ => __
+                    .If(data => data.A >= data.B, __ => __
                         .Step<Step1>()
                         .Step<Step2>()
                         .Step<Step3>()
                         .Step<Step4>()))
                 .Step<Step2>();
         }
+    }
+
+    private class WorkflowData
+    {
+        public int A { get; set; }
+
+        public int B { get; set; }
     }
 }

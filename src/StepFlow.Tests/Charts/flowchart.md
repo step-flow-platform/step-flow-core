@@ -1,11 +1,11 @@
 ```mermaid
 flowchart TB
 node1[Step1]
-node2{_ => True}
+node2{"(data.A > 5)"}
 node3[Step1]
-node4{_ => True}
+node4{"(data.B > 10)"}
 node5[Step1]
-node6{_ => True}
+node6{"(data.A >= data.B)"}
 node7[Step1]
 node8[Step2]
 node9[Step3]
