@@ -7,7 +7,7 @@ public class IncrementStep : IStep
 {
     public int Value { get; set; } = default!;
 
-    public int IncrementedValue { get; private set; } = default!;
+    public int IncrementedValue { get; private set; }
 
     public Task ExecuteAsync()
     {
