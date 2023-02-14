@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace StepFlow.Contracts.Definitions;
+namespace StepFlow.Contracts.Definition;
 
 public record WorkflowStepDefinition(
+        string Id,
+        string? NextNodeId,
         Type StepType,
         List<PropertyMap> Input,
         PropertyMap? Output)
-    : WorkflowNodeDefinition(WorkflowNodeType.Step);
+    : WorkflowNodeDefinition(Id);

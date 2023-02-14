@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace StepFlow.Contracts.Definitions;
+namespace StepFlow.Contracts.Definition;
 
 public record PropertyMap(
     LambdaExpression Source,

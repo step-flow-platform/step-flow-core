@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using StepFlow.Contracts;
-using StepFlow.Contracts.Definitions;
+using StepFlow.Contracts.Definition;
 using StepFlow.Core.Builders;
 
 namespace StepFlow.Core
@@ -25,39 +26,44 @@ namespace StepFlow.Core
         public async Task StartWorkflow(WorkflowDefinition definition, object? data = null)
         {
             data ??= Activator.CreateInstance(definition.DataType);
-            await ProcessBranch((WorkflowBranchDefinition)definition.MainBranch, data);
+
+            string? nextNodeId = definition.Nodes.FirstOrDefault()?.Id;
+            while (nextNodeId is not null)
+            {
+                WorkflowNodeDefinition node = definition.Nodes.Single(x => x.Id == nextNodeId);
+                nextNodeId = await ProcessNode(node, data);
+            }
         }
 
-        private async Task ProcessBranch(WorkflowBranchDefinition branchDefinition, object data)
+        private async Task<string?> ProcessNode(WorkflowNodeDefinition nodeDefinition, object data)
         {
-            object? conditionResult = branchDefinition.Condition?.Compile().DynamicInvoke(data);
-            if (conditionResult is false)
+            return nodeDefinition switch
             {
-                return;
-            }
-
-            foreach (WorkflowNodeDefinition nodeDefinition in branchDefinition.Nodes)
-            {
-                switch (nodeDefinition.NodeType)
-                {
-                    case WorkflowNodeType.Branch:
-                        await ProcessBranch((WorkflowBranchDefinition)nodeDefinition, data);
-                        break;
-                    case WorkflowNodeType.Step:
-                        await ProcessStep((WorkflowStepDefinition)nodeDefinition, data);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+                WorkflowStepDefinition stepDefinition => await ProcessStep(stepDefinition, data),
+                WorkflowIfDefinition ifDefinition => ProcessIf(ifDefinition, data),
+                WorkflowGoToDefinition goToDefinition => goToDefinition.NextNodeId,
+                _ => throw new StepFlowException("Unexpected Node type")
+            };
         }
 
-        private async Task ProcessStep(WorkflowStepDefinition definition, object data)
+        private async Task<string?> ProcessStep(WorkflowStepDefinition definition, object data)
         {
             IStep step = ConstructStep(definition.StepType);
             ProcessStepInput(definition, step, data);
             await ExecuteStep(step);
             ProcessStepOutput(definition, step, data);
+            return definition.NextNodeId;
+        }
+
+        private string? ProcessIf(WorkflowIfDefinition definition, object data)
+        {
+            object? conditionResult = definition.Condition.Compile().DynamicInvoke(data);
+            return conditionResult switch
+            {
+                true => definition.TrueNodeId,
+                false => definition.FalseNodeId,
+                _ => throw new StepFlowException("Unexpected IF condition result")
+            };
         }
 
         private IStep ConstructStep(Type stepType)

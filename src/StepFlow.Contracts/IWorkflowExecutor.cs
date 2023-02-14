@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using StepFlow.Contracts.Definitions;
+using StepFlow.Contracts.Definition;
 
 namespace StepFlow.Contracts
 {

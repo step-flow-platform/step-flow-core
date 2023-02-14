@@ -1,5 +1,5 @@
 using System;
-using StepFlow.Contracts.Definitions;
+using StepFlow.Contracts.Definition;
 using StepFlow.Dsl.Model;
 
 namespace StepFlow.Dsl;

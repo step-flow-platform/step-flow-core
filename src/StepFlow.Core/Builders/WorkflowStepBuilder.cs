@@ -2,19 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using StepFlow.Contracts;
-using StepFlow.Contracts.Definitions;
+using StepFlow.Contracts.Definition;
 
 namespace StepFlow.Core.Builders;
 
-internal class StepBuilder<TStep, TData> : IStepBuilder<TStep, TData>, IWorkflowNodeBuilder
+internal class WorkflowStepBuilder<TStep, TData> : IWorkflowStepBuilder<TStep, TData>, IWorkflowNodeBuilder
     where TStep : IStep
 {
-    public IStepBuilder<TStep, TData> Id(string id)
+    public WorkflowStepBuilder()
     {
-        throw new NotImplementedException();
+        NodeId = Guid.NewGuid().ToString();
     }
 
-    public IStepBuilder<TStep, TData> Input<TInput>(Expression<Func<TStep, TInput>> stepProperty,
+    public string NodeId { get; private set; }
+
+    public string? NextNodeId { get; set; }
+
+    public IWorkflowStepBuilder<TStep, TData> Id(string id)
+    {
+        NodeId = id;
+        return this;
+    }
+
+    public IWorkflowStepBuilder<TStep, TData> Input<TInput>(Expression<Func<TStep, TInput>> stepProperty,
         Expression<Func<TData, TInput>> value)
     {
         _input.Add(new PropertyMap(value, stepProperty));
@@ -28,7 +38,7 @@ internal class StepBuilder<TStep, TData> : IStepBuilder<TStep, TData>, IWorkflow
 
     public WorkflowNodeDefinition Build()
     {
-        WorkflowStepDefinition definition = new(typeof(TStep), _input, _output);
+        WorkflowStepDefinition definition = new(NodeId, NextNodeId, typeof(TStep), _input, _output);
         return definition;
     }
 
