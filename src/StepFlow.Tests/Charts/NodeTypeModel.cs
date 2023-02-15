@@ -2,6 +2,8 @@ namespace StepFlow.Tests.Charts;
 
 public enum NodeTypeModel
 {
+    Control,
     Step,
-    If
+    If,
+    GoTo
 }

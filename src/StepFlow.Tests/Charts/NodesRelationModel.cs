@@ -1,6 +1,9 @@
 namespace StepFlow.Tests.Charts;
 
 public record NodesRelationModel(
-    NodeModel From,
-    NodeModel To,
-    string? Title);
+    string FromId,
+    string ToId,
+    string? Title)
+{
+    public string ToId { get; set; } = ToId;
+}

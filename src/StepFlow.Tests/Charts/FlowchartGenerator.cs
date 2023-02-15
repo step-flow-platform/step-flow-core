@@ -1,120 +1,191 @@
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Text;
-// using StepFlow.Contracts;
-// using StepFlow.Contracts.Definition;
-//
-// namespace StepFlow.Tests.Charts;
-//
-// public class FlowchartGenerator
-// {
-//     public string Generate(WorkflowDefinition workflow)
-//     {
-//         WorkflowBranchDefinition? mainBranchDefinition = workflow.MainBranch as WorkflowBranchDefinition;
-//         if (mainBranchDefinition is null)
-//         {
-//             throw new StepFlowException("MainBranch is not WorkflowBranchDefinition");
-//         }
-//
-//         ProcessBranch(mainBranchDefinition);
-//
-//         StringBuilder builder = new();
-//         AddHeader(builder);
-//         BuildNodes(builder);
-//         builder.AppendLine();
-//         BuildRelations(builder);
-//         AddFooter(builder);
-//         return builder.ToString();
-//     }
-//
-//     private void ProcessBranch(WorkflowBranchDefinition branchDefinition)
-//     {
-//         foreach (WorkflowNodeDefinition nodeDefinition in branchDefinition.Nodes)
-//         {
-//             ProcessNode(nodeDefinition);
-//             if (nodeDefinition.NodeType is WorkflowNodeType.Branch)
-//             {
-//                 NodeModel branchNode = _nodes.Last();
-//                 ProcessBranch((WorkflowBranchDefinition)nodeDefinition);
-//                 _branchNodes.Push(branchNode);
-//             }
-//         }
-//     }
-//
-//     private void ProcessNode(WorkflowNodeDefinition nodeDefinition)
-//     {
-//         NodeModel node = nodeDefinition.NodeType switch
-//         {
-//             WorkflowNodeType.Branch => ConvertBranch((WorkflowBranchDefinition)nodeDefinition),
-//             WorkflowNodeType.Step => ConvertStep((WorkflowStepDefinition)nodeDefinition),
-//             _ => throw new StepFlowException($"Unexpected NodeType: '{nodeDefinition.NodeType}'")
-//         };
-//
-//         if (_nodes.Count > 0)
-//         {
-//             NodeModel lastNode = _nodes.Last();
-//             string? relationTitle = lastNode.Type is NodeTypeModel.If ? "true" : null;
-//             _relations.Add(new NodesRelationModel(lastNode, node, relationTitle));
-//             while (_branchNodes.TryPop(out var branchNode))
-//             {
-//                 _relations.Add(new NodesRelationModel(branchNode, node, "false"));
-//             }
-//         }
-//
-//         _nodes.Add(node);
-//     }
-//
-//     private NodeModel ConvertStep(WorkflowStepDefinition stepDefinition)
-//     {
-//         string id = $"node{++_nodeCounter}";
-//         return new NodeModel(id, stepDefinition.StepType.Id, NodeTypeModel.Step);
-//     }
-//
-//     private NodeModel ConvertBranch(WorkflowBranchDefinition branchDefinition)
-//     {
-//         string id = $"node{++_nodeCounter}";
-//         string condition = branchDefinition.Condition is not null ? $"\"{branchDefinition.Condition.Body}\"" : " ";
-//         return new NodeModel(id, condition, NodeTypeModel.If);
-//     }
-//
-//     private void BuildNodes(StringBuilder builder)
-//     {
-//         foreach (NodeModel node in _nodes)
-//         {
-//             switch (node.Type)
-//             {
-//                 case NodeTypeModel.Step:
-//                     builder.AppendLine($"{node.Id}[{node.Text}]");
-//                     break;
-//                 case NodeTypeModel.If:
-//                     builder.AppendLine($"{node.Id}{{{node.Text}}}");
-//                     break;
-//             }
-//         }
-//     }
-//
-//     private void BuildRelations(StringBuilder builder)
-//     {
-//         foreach (NodesRelationModel relation in _relations)
-//         {
-//             string title = relation.Title != null ? $"|{relation.Title}|" : string.Empty;
-//             builder.AppendLine($"{relation.From.Id} -->{title} {relation.To.Id}");
-//         }
-//     }
-//
-//     private void AddHeader(StringBuilder builder)
-//     {
-//         builder.AppendLine("```mermaid");
-//         builder.AppendLine("flowchart TB");
-//     }
-//
-//     private void AddFooter(StringBuilder builder)
-//     {
-//         builder.AppendLine("```");
-//     }
-//
-//     private readonly List<NodeModel> _nodes = new();
-//     private readonly List<NodesRelationModel> _relations = new();
-//     private readonly Stack<NodeModel> _branchNodes = new();
-//     private int _nodeCounter;
-// }
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using StepFlow.Contracts;
+using StepFlow.Contracts.Definition;
+
+namespace StepFlow.Tests.Charts;
+
+public class FlowchartGenerator
+{
+    public string Generate(WorkflowDefinition workflow)
+    {
+        foreach (WorkflowNodeDefinition node in workflow.Nodes)
+        {
+            ProcessNode(node);
+        }
+
+        ReduceGoToNodes();
+        AddStartNode();
+
+        StringBuilder builder = new();
+        AddHeader(builder);
+        BuildNodes(builder);
+        builder.AppendLine();
+        BuildRelations(builder);
+        AddFooter(builder);
+        ReplaceNodeIds(builder);
+        return builder.ToString();
+    }
+
+    private void ProcessNode(WorkflowNodeDefinition nodeDefinition)
+    {
+        switch (nodeDefinition)
+        {
+            case WorkflowStepDefinition stepDefinition:
+                ProcessStepNode(stepDefinition);
+                break;
+            case WorkflowIfDefinition ifDefinition:
+                ProcessIfNode(ifDefinition);
+                break;
+            case WorkflowGoToDefinition goToDefinition:
+                ProcessGoToNode(goToDefinition);
+                break;
+            default:
+                throw new StepFlowException($"Unexpected NodeType: '{nodeDefinition.GetType().Name}'");
+        }
+    }
+
+    private void ProcessStepNode(WorkflowStepDefinition definition)
+    {
+        NodeModel node = new(definition.Id, definition.StepType.Name, NodeTypeModel.Step);
+        _nodes.Add(node);
+
+        if (definition.NextNodeId is not null)
+        {
+            NodesRelationModel relation = new(node.Id, definition.NextNodeId, null);
+            _relations.Add(relation);
+        }
+        else
+        {
+            AddEndNodeRelation(node.Id);
+        }
+    }
+
+    private void ProcessIfNode(WorkflowIfDefinition definition)
+    {
+        string condition = $"\"{definition.Condition.Body}\"";
+        NodeModel node = new(definition.Id, condition, NodeTypeModel.If);
+        _nodes.Add(node);
+
+        if (definition.TrueNodeId is not null)
+        {
+            NodesRelationModel relation = new(node.Id, definition.TrueNodeId, "true");
+            _relations.Add(relation);
+        }
+
+        if (definition.FalseNodeId is not null)
+        {
+            NodesRelationModel relation = new(node.Id, definition.FalseNodeId, "false");
+            _relations.Add(relation);
+        }
+        else
+        {
+            AddEndNodeRelation(node.Id, "false");
+        }
+    }
+
+    private void ProcessGoToNode(WorkflowGoToDefinition definition)
+    {
+        NodeModel node = new(definition.Id, string.Empty, NodeTypeModel.GoTo);
+        _nodes.Add(node);
+
+        NodesRelationModel relation = new(node.Id, definition.NextNodeId, null);
+        _relations.Add(relation);
+    }
+
+    private void ReduceGoToNodes()
+    {
+        IEnumerable<NodeModel> goToNodes = _nodes.Where(x => x.Type is NodeTypeModel.GoTo);
+        foreach (NodeModel goToNode in goToNodes)
+        {
+            NodesRelationModel goToRelation = _relations.Single(x => x.FromId == goToNode.Id);
+            _relations.Remove(goToRelation);
+
+            IEnumerable<NodesRelationModel> relations = _relations.Where(x => x.ToId == goToNode.Id);
+            foreach (NodesRelationModel relation in relations)
+            {
+                relation.ToId = goToRelation.ToId;
+            }
+        }
+    }
+
+    private void AddStartNode()
+    {
+        NodeModel? firstNode = _nodes.FirstOrDefault();
+        NodeModel startNode = new NodeModel("startNode", "Start", NodeTypeModel.Control);
+        _nodes.Insert(0, startNode);
+        if (firstNode is not null)
+        {
+            NodesRelationModel relation = new(startNode.Id, firstNode.Id, null);
+            _relations.Insert(0, relation);
+        }
+    }
+
+    private void AddEndNodeRelation(string fromId, string? title = null)
+    {
+        if (_endNode is null)
+        {
+            _endNode = new NodeModel("endNode", "End", NodeTypeModel.Control);
+            _nodes.Add(_endNode);
+        }
+
+        NodesRelationModel relation = new(fromId, _endNode.Id, title);
+        _relations.Add(relation);
+    }
+
+    private void BuildNodes(StringBuilder builder)
+    {
+        foreach (NodeModel node in _nodes)
+        {
+            switch (node.Type)
+            {
+                case NodeTypeModel.Step:
+                    builder.AppendLine($"{node.Id}[{node.Text}]");
+                    break;
+                case NodeTypeModel.If:
+                    builder.AppendLine($"{node.Id}{{{node.Text}}}");
+                    break;
+                case NodeTypeModel.Control:
+                    builder.AppendLine($"{node.Id}(({node.Text}))");
+                    break;
+            }
+        }
+    }
+
+    private void BuildRelations(StringBuilder builder)
+    {
+        foreach (NodesRelationModel relation in _relations)
+        {
+            string title = relation.Title != null ? $"|{relation.Title}|" : string.Empty;
+            builder.AppendLine($"{relation.FromId} -->{title} {relation.ToId}");
+        }
+    }
+
+    private void AddHeader(StringBuilder builder)
+    {
+        builder.AppendLine("```mermaid");
+        builder.AppendLine("flowchart TB");
+    }
+
+    private void AddFooter(StringBuilder builder)
+    {
+        builder.AppendLine("```");
+    }
+
+    private void ReplaceNodeIds(StringBuilder builder)
+    {
+        for (int i = 0; i < _nodes.Count; ++i)
+        {
+            if (Guid.TryParse(_nodes[i].Id, out _))
+            {
+                builder.Replace(_nodes[i].Id, $"node{i + 1}");
+            }
+        }
+    }
+
+    private readonly List<NodeModel> _nodes = new();
+    private readonly List<NodesRelationModel> _relations = new();
+    private NodeModel? _endNode;
+}
