@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using StepFlow.Contracts;
 
-namespace StepFlow.Tests.TestWorkflowTypes.Steps;
+namespace StepFlow.Tests.TestSteps;
 
-public class Step1 : IStep
+public class Step3 : IStep
 {
     public Task ExecuteAsync()
     {

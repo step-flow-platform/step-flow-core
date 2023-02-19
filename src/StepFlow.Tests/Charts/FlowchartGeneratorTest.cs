@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StepFlow.Contracts;
 using StepFlow.Contracts.Definition;
 using StepFlow.Core.Builders;
-using StepFlow.Tests.TestWorkflowTypes.Steps;
+using StepFlow.Tests.TestSteps;
 
 namespace StepFlow.Tests.Charts;
 

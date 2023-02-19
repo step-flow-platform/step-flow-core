@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using StepFlow.Contracts;
 
-namespace StepFlow.Tests.TestWorkflowTypes.Steps;
+namespace StepFlow.Tests.TestSteps;
 
 public class IncrementStep : IStep
 {

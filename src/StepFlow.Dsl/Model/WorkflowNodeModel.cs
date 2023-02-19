@@ -1,4 +1,6 @@
 namespace StepFlow.Dsl.Model;
 
-public record WorkflowNodeModel(
-    string Name);
+public abstract class WorkflowNodeModel
+{
+    public string Id { get; set; } = default!;
+}

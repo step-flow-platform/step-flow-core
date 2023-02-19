@@ -1,40 +1,61 @@
-// using Microsoft.VisualStudio.TestTools.UnitTesting;
-// using StepFlow.Core.Builders;
-// using StepFlow.Tests.TestWorkflowTypes;
-//
-// namespace StepFlow.Tests.Core;
-//
-// [TestClass]
-// public class WorkflowBuilderTest
-// {
-//     [TestMethod]
-//     public void BuildWorkflowDefinition()
-//     {
-//         WorkflowBuilder<WorkflowData> builder = new();
-//         TestWorkflow workflow = new();
-//         workflow.Build(builder);
-//         WorkflowDefinition definition = builder.BuildDefinition();
-//
-//         Assert.AreEqual("StepFlow.Tests.TestWorkflowTypes.WorkflowData", definition.DataType.FullName);
-//         Assert.AreEqual(WorkflowNodeType.Branch, definition.MainBranch.NodeType);
-//
-//         WorkflowBranchDefinition mainBranch = (definition.MainBranch as WorkflowBranchDefinition)!;
-//         TestHelper.AssertBranch(mainBranch, false, 6);
-//         TestHelper.AssertStep(mainBranch.Nodes[0], "StepFlow.Tests.TestWorkflowTypes.Steps.Step1", 0, false);
-//         TestHelper.AssertStep(mainBranch.Nodes[1], "StepFlow.Tests.TestWorkflowTypes.Steps.Step2", 3, false);
-//         TestHelper.AssertStep(mainBranch.Nodes[2], "StepFlow.Tests.TestWorkflowTypes.Steps.Step3", 1, true);
-//         TestHelper.AssertStep(mainBranch.Nodes[3], "StepFlow.Tests.TestWorkflowTypes.Steps.Step1", 0, false);
-//         TestHelper.AssertStep(mainBranch.Nodes[5], "StepFlow.Tests.TestWorkflowTypes.Steps.Step3", 0, false);
-//
-//         WorkflowBranchDefinition ifBranch1 = (mainBranch.Nodes[4] as WorkflowBranchDefinition)!;
-//         TestHelper.AssertBranch(ifBranch1, true, 4);
-//         TestHelper.AssertStep(ifBranch1.Nodes[0], "StepFlow.Tests.TestWorkflowTypes.Steps.Step1", 0, false);
-//         TestHelper.AssertStep(ifBranch1.Nodes[1], "StepFlow.Tests.TestWorkflowTypes.Steps.Step4", 2, false);
-//         TestHelper.AssertStep(ifBranch1.Nodes[3], "StepFlow.Tests.TestWorkflowTypes.Steps.Step1", 0, false);
-//
-//         WorkflowBranchDefinition ifBranch2 = (ifBranch1.Nodes[2] as WorkflowBranchDefinition)!;
-//         TestHelper.AssertBranch(ifBranch2, true, 2);
-//         TestHelper.AssertStep(ifBranch2.Nodes[0], "StepFlow.Tests.TestWorkflowTypes.Steps.Step1", 0, false);
-//         TestHelper.AssertStep(ifBranch2.Nodes[1], "StepFlow.Tests.TestWorkflowTypes.Steps.Step3", 1, true);
-//     }
-// }
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StepFlow.Contracts;
+using StepFlow.Contracts.Definition;
+using StepFlow.Core.Builders;
+using StepFlow.Tests.TestSteps;
+
+namespace StepFlow.Tests.Core;
+
+[TestClass]
+public class WorkflowBuilderTest
+{
+    [TestMethod]
+    public void BuildWorkflowDefinition()
+    {
+        WorkflowBuilder<WorkflowData> builder = new();
+        Workflow workflow = new();
+        workflow.Build(builder);
+        WorkflowDefinition definition = builder.BuildDefinition();
+
+        Assert.AreEqual("StepFlow.Tests.Core.WorkflowBuilderTest+WorkflowData", definition.DataType.FullName);
+        Assert.AreEqual(10, definition.Nodes.Count);
+
+        WorkflowAssert.StepDefinition(definition.Nodes[0], "StepFlow.Tests.TestSteps.Step1", 0, false, "id1");
+        WorkflowAssert.StepDefinition(definition.Nodes[1], "StepFlow.Tests.TestSteps.Step2", 0, false);
+        WorkflowAssert.IfDefinition(definition.Nodes[2], "(data.A > 10)", "if1");
+        WorkflowAssert.StepDefinition(definition.Nodes[3], "StepFlow.Tests.TestSteps.Step3", 0, false);
+        WorkflowAssert.StepDefinition(definition.Nodes[4], "StepFlow.Tests.TestSteps.Step3", 0, false);
+        WorkflowAssert.IfDefinition(definition.Nodes[5], "(data.B > 20)");
+        WorkflowAssert.StepDefinition(definition.Nodes[6], "StepFlow.Tests.TestSteps.Step4", 0, false, "id2");
+        WorkflowAssert.StepDefinition(definition.Nodes[7], "StepFlow.Tests.TestSteps.Step4", 0, false);
+        WorkflowAssert.GoToDefinition(definition.Nodes[8], "if1");
+        WorkflowAssert.StepDefinition(definition.Nodes[9], "StepFlow.Tests.TestSteps.Step5", 0, false);
+    }
+
+    private class WorkflowData
+    {
+        public int A { get; set; } = default!;
+
+        public int B { get; set; } = default!;
+    }
+
+    private class Workflow : IWorkflow<WorkflowData>
+    {
+        public void Build(IWorkflowBuilder<WorkflowData> builder)
+        {
+            builder
+                .Step<Step1>(x => x
+                    .Id("id1"))
+                .Step<Step2>()
+                .If("if1", data => data.A > 10, _ => _
+                    .Step<Step3>()
+                    .Step<Step3>()
+                    .If(data => data.B > 20, __ => __
+                        .Step<Step4>(x => x
+                            .Id("id2"))
+                        .Step<Step4>()
+                        .GoTo("if1")))
+                .Step<Step5>();
+        }
+    }
+}

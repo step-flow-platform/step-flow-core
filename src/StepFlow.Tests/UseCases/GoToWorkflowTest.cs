@@ -2,7 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StepFlow.Contracts;
-using StepFlow.Tests.TestWorkflowTypes.Steps;
+using StepFlow.Tests.TestSteps;
 
 namespace StepFlow.Tests.UseCases;
 

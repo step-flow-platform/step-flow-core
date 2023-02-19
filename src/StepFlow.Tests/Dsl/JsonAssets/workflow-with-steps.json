@@ -2,10 +2,10 @@
     "data": "WorkflowData",
     "steps": [
         {
-            "name": "SimpleStep"
+            "id": "SimpleStep"
         },
         {
-            "name": "StepWithInput",
+            "id": "StepWithInput",
             "input": {
                 "SomePropStr": "StringValue",
                 "OtherPropInt": 42,
@@ -13,7 +13,7 @@
             }
         },
         {
-            "name": "StepWithInputAndOutput",
+            "id": "StepWithInputAndOutput",
             "input": {
                 "StepProperty": "value"
             },

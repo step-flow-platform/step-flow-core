@@ -1,0 +1,14 @@
+Data: WorkflowData
+Steps:
+  - Id: step1
+  - Id: +If
+    Condition: data.Result > 5
+    Steps:
+      - Id: step11
+      - Id: step12
+      - Id: +If
+        Condition: data.SomeFlag
+        Steps:
+          - Id: step111
+          - Id: step112
+  - Id: step111

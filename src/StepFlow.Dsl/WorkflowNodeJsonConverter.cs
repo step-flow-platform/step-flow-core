@@ -38,7 +38,7 @@ internal class WorkflowNodeJsonConverter : JsonConverter<WorkflowNodeModel>
         return typeName switch
         {
             null => throw new JsonException(),
-            "+If" => JsonSerializer.Deserialize<WorkflowBranchModel>(ref reader, options)!,
+            /*"+If" => JsonSerializer.Deserialize<WorkflowBranchModel>(ref reader, options)!,*/
             _ => JsonSerializer.Deserialize<WorkflowStepModel>(ref reader, options)!
         };
     }

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using StepFlow.Core;
-using StepFlow.Tests.TestWorkflowTypes.Steps;
+using StepFlow.Tests.TestSteps;
 
 namespace StepFlow.Tests.UseCases;
 
