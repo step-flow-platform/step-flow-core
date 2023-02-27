@@ -2,37 +2,36 @@
     "data": "WorkflowData",
     "steps": [
         {
-            "id": "step1"
+            "name": "step1"
         },
         {
-            "id": "+If",
+            "name": "+If",
             "Condition": "data.Result > 5",
             "steps": [
                 {
-                    "id": "step11"
+                    "name": "step11"
                 },
                 {
-                    "id": "step12"
+                    "name": "step12"
                 },
                 {
-                    "id": "+If",
+                    "name": "+If",
                     "Condition": "data.SomeFlag",
                     "steps": [
                         {
-                            "id": "step111"
+                            "name": "step111"
                         },
                         {
-                            "id": "step112"
+                            "name": "step112"
                         },
                         {
-                            
                         }
                     ]
                 }
             ]
         },
         {
-            "id": "step3"
+            "name": "step3"
         }
     ]
 }

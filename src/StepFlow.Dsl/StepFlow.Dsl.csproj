@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StepFlow.Contracts\StepFlow.Contracts.csproj" />
+    <ProjectReference Include="..\StepFlow.Core\StepFlow.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

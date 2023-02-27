@@ -6,6 +6,7 @@
 // using System.Reflection;
 // using StepFlow.Contracts;
 // using StepFlow.Contracts.Definition;
+// using StepFlow.Core.Builders;
 // using StepFlow.Dsl.Model;
 //
 // namespace StepFlow.Dsl;
@@ -29,7 +30,7 @@
 //         return definition;
 //     }
 //
-//     private WorkflowDefinition Convert(WorkflowDefinitionModel model)
+//     /*private WorkflowDefinition Convert(WorkflowDefinitionModel model)
 //     {
 //         Type dataType = typeof(object);
 //         if (model.Data is not null)
@@ -119,7 +120,7 @@
 //         LambdaExpression target = Expression.Lambda(targetFuncType, targetProperty, targetParameter);
 //
 //         return new PropertyMap(source, target);
-//     }
+//     }*/
 //
 //     private readonly WorkflowDefinitionLoaderOptions _options;
 // }

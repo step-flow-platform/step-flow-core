@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="StepFlow.Tests" />
+    <InternalsVisibleTo Include="StepFlow.Dsl" />
   </ItemGroup>
 
   <ItemGroup>

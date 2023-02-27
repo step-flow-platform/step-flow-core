@@ -2,7 +2,10 @@ using System.Collections.Generic;
 
 namespace StepFlow.Dsl.Model
 {
-    public record WorkflowDefinitionModel(
-        string? Data,
-        List<WorkflowNodeModel> Steps);
+    public class WorkflowDefinitionModel
+    {
+        public string? Data { get; set; } = default!;
+
+        public List<WorkflowNodeModel> Steps { get; set; } = default!;
+    }
 }

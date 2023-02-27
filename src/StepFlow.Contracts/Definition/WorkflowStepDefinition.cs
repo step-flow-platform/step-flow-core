@@ -4,8 +4,7 @@ using System.Collections.Generic;
 namespace StepFlow.Contracts.Definition;
 
 public record WorkflowStepDefinition(
-        string Id,
-        string? NextNodeId,
+        string? Id,
         Type StepType,
         List<PropertyMap> Input,
         PropertyMap? Output)
