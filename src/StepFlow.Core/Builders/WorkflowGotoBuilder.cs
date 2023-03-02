@@ -1,29 +1,21 @@
-using System;
 using StepFlow.Contracts.Definition;
 
 namespace StepFlow.Core.Builders;
 
-public class WorkflowGotoBuilder : IWorkflowNodeBuilder
+internal class WorkflowGotoBuilder : IWorkflowNodeBuilder
 {
-    public WorkflowGotoBuilder(string nextNodeId)
+    public WorkflowGotoBuilder(string? nodeId, string nextNodeId)
     {
-        NodeId = Guid.NewGuid().ToString();
+        _nodeId = nodeId;
         _nextNodeId = nextNodeId;
-    }
-
-    public string NodeId { get; }
-
-    public string? NextNodeId
-    {
-        get => _nextNodeId;
-        set => throw new InvalidOperationException();
     }
 
     public WorkflowNodeDefinition Build()
     {
-        WorkflowGoToDefinition definition = new(NodeId, _nextNodeId);
+        WorkflowGoToDefinition definition = new(_nodeId, _nextNodeId);
         return definition;
     }
 
+    private readonly string? _nodeId;
     private readonly string _nextNodeId;
 }
