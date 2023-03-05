@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using StepFlow.Contracts;
@@ -10,8 +11,11 @@ public class WorkflowGraph
     public WorkflowGraph(WorkflowDefinition workflowDefinition)
     {
         // TODO: Make sure there are no nodes after GoTo
+        WorkflowDataType = workflowDefinition.DataType;
         Process(workflowDefinition.Nodes);
     }
+
+    public Type WorkflowDataType { get; }
 
     public WorkflowNode Node(string? id = null)
     {

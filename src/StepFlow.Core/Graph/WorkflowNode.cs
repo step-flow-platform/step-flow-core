@@ -18,12 +18,12 @@ public class WorkflowNode
 
     public WorkflowNodeDefinition Definition { get; }
 
-    public IReadOnlyList<string> Directions => _definitions;
+    public IReadOnlyList<string> Directions => _directions;
 
     public void AddDirection(string id)
     {
-        _definitions.Add(id);
+        _directions.Add(id);
     }
 
-    private readonly List<string> _definitions = new();
+    private readonly List<string> _directions = new();
 }
