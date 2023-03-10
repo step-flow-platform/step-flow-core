@@ -1,6 +1,6 @@
 namespace StepFlow.Tests.Charts;
 
-public record NodesRelationModel(
+public record NodesDirectionModel(
     string FromId,
     string ToId,
     string? Title)
