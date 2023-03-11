@@ -16,7 +16,7 @@ namespace StepFlow.Dsl
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                options.Converters.Add(new WorkflowNodeJsonConverter());
+                /*options.Converters.Add(new WorkflowNodeJsonConverter());*/
                 return source => JsonSerializer.Deserialize<WorkflowDefinitionModel>(source, options);
             }
         }

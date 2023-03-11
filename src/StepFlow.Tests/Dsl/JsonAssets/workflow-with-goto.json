@@ -1,0 +1,19 @@
+{
+    "data": "WorkflowData",
+    "steps": [
+        {
+            "type": "s1",
+            "id": "a1"
+        },
+        {
+            "type": "s2"
+        },
+        {
+            "type": "s3"
+        },
+        {
+            "type": "+GoTo",
+            "NextId": "a1"
+        }
+    ]
+}

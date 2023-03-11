@@ -2,10 +2,10 @@
     "data": "WorkflowData",
     "steps": [
         {
-            "name": "Step1"
+            "type": "Step1"
         },
         {
-            "name": "Step2",
+            "type": "Step2",
             "input": {
                 "Prop1": "\"SomeValue\"",
                 "Prop2": 42,
@@ -13,7 +13,7 @@
             }
         },
         {
-            "name": "Step3",
+            "type": "Step3",
             "input": {
                 "Prop": "\"value\""
             },
@@ -22,47 +22,52 @@
             }
         },
         {
-            "name": "Step1"
+            "type": "Step1",
+            "id": "s1"
         },
         {
-            "name": "+If",
+            "type": "+If",
             "Condition": "data.IntValue > 5",
             "steps": [
                 {
-                    "name": "Step1"
+                    "type": "Step1"
                 },
                 {
-                    "name": "Step4",
+                    "type": "Step4",
                     "input": {
                         "PropA": "\"val-a\"",
                         "PropB": 1990
                     }
                 },
                 {
-                    "name": "+If",
+                    "type": "+If",
                     "Condition": "data.BoolValue",
                     "steps": [
                         {
-                            "name": "Step1"
+                            "type": "Step1"
                         },
                         {
-                            "name": "Step3",
+                            "type": "Step3",
                             "input": {
                                 "Prop": "data.StringValue"
                             },
                             "output": {
                                 "StringValue": "step.Result"
                             }
+                        },
+                        {
+                            "type": "+GoTo",
+                            "nextId": "s1"
                         }
                     ]
                 },
                 {
-                    "name": "Step1"
+                    "type": "Step1"
                 }
             ]
         },
         {
-            "name": "Step3"
+            "type": "Step3"
         }
     ]
 }

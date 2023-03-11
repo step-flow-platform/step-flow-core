@@ -28,7 +28,7 @@
     <None Update="Dsl\JsonAssets\workflow-with-steps.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dsl\JsonAssets\workflow-with-nested-if-branches.json">
+    <None Update="Dsl\JsonAssets\workflow-with-nested-if.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Dsl\JsonAssets\test-workflow.json">
@@ -41,6 +41,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Dsl\YamlAssets\workflow-with-steps.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Dsl\JsonAssets\workflow-with-goto.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
