@@ -37,13 +37,16 @@
     <None Update="Dsl\YamlAssets\workflow-without-steps.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dsl\YamlAssets\workflow-with-nested-if-branches.yaml">
+    <None Update="Dsl\YamlAssets\workflow-with-nested-if.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Dsl\YamlAssets\workflow-with-steps.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Dsl\JsonAssets\workflow-with-goto.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Dsl\YamlAssets\workflow-with-goto.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1,0 +1,14 @@
+data: WorkflowData
+steps:
+  - type: step1
+  - type: +If
+    condition: data.Result > 5
+    steps:
+      - type: step11
+      - type: step12
+      - type: +If
+        condition: data.SomeFlag
+        steps:
+          - type: step111
+          - type: step112
+  - type: step3

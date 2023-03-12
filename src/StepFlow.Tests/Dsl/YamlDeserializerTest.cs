@@ -17,6 +17,6 @@ public class YamlDeserializerTest
 
         Assert.IsNotNull(model);
         Assert.AreEqual("DataType", model.Data);
-        Assert.AreEqual(0, model.Steps.Count);
+        Assert.IsNull(model.Steps);
     }
 }

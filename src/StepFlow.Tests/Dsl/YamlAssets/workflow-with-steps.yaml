@@ -1,13 +1,13 @@
-Data: WorkflowData
-Steps:
-  - Id: SimpleStep
-  - Id: StepWithInput
-    Input:
-      - SomePropStr: StringValue
-      - OtherPropInt: 42
-      - PropExpr: data.Value
-  - Id: StepWithInputAndOutput
-    Input:
-      - StepProperty: value
-    Output:
-      - Result: step.Result
+data: WorkflowData
+steps:
+  - type: SimpleStep
+  - type: StepWithInput
+    input:
+      SomePropStr: StringValue
+      OtherPropInt: 42
+      PropExpr: data.Value
+  - type: StepWithInputAndOutput
+    input:
+      StepProperty: value
+    output:
+      Result: step.Result

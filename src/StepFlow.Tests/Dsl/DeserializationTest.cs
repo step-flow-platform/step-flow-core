@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,26 +9,28 @@ using StepFlow.Dsl.Model;
 namespace StepFlow.Tests.Dsl;
 
 [TestClass]
-public class JsonDeserializerTest
+public class DeserializationTest
 {
-    [TestMethod]
-    public void DeserializeWorkflowDefinitionWithoutSteps()
+    [DataTestMethod]
+    [DataRow("Dsl/JsonAssets/workflow-without-steps.json", DeserializerType.Json)]
+    [DataRow("Dsl/YamlAssets/workflow-without-steps.yaml", DeserializerType.Yaml)]
+    public void DeserializeWorkflowDefinitionWithoutSteps(string filePath, DeserializerType deserializerType)
     {
-        string json = File.ReadAllText("Dsl/JsonAssets/workflow-without-steps.json");
-
-        WorkflowDefinitionModel? model = Deserializers.Json(json);
+        string file = File.ReadAllText(filePath);
+        WorkflowDefinitionModel? model = Deserialize(file, deserializerType);
 
         Assert.IsNotNull(model);
         Assert.AreEqual("DataType", model.Data);
-        Assert.AreEqual(0, model.Steps.Count);
+        Assert.IsTrue(model.Steps is null || model.Steps.Count == 0);
     }
 
-    [TestMethod]
-    public void DeserializeWorkflowDefinitionWithSteps()
+    [DataTestMethod]
+    [DataRow("Dsl/JsonAssets/workflow-with-steps.json", DeserializerType.Json)]
+    [DataRow("Dsl/YamlAssets/workflow-with-steps.yaml", DeserializerType.Yaml)]
+    public void DeserializeWorkflowDefinitionWithSteps(string filePath, DeserializerType deserializerType)
     {
-        string json = File.ReadAllText("Dsl/JsonAssets/workflow-with-steps.json");
-
-        WorkflowDefinitionModel? model = Deserializers.Json(json);
+        string file = File.ReadAllText(filePath);
+        WorkflowDefinitionModel? model = Deserialize(file, deserializerType);
 
         Assert.IsNotNull(model);
         Assert.AreEqual("WorkflowData", model.Data);
@@ -50,12 +53,13 @@ public class JsonDeserializerTest
             new KeyValuePair<string, object>("Result", "step.Result"));
     }
 
-    [TestMethod]
-    public void DeserializeWorkflowDefinitionWithNestedIf()
+    [DataTestMethod]
+    [DataRow("Dsl/JsonAssets/workflow-with-nested-if.json", DeserializerType.Json)]
+    [DataRow("Dsl/YamlAssets/workflow-with-nested-if.yaml", DeserializerType.Yaml)]
+    public void DeserializeWorkflowDefinitionWithNestedIf(string filePath, DeserializerType deserializerType)
     {
-        string json = File.ReadAllText("Dsl/JsonAssets/workflow-with-nested-if.json");
-
-        WorkflowDefinitionModel? model = Deserializers.Json(json);
+        string file = File.ReadAllText(filePath);
+        WorkflowDefinitionModel? model = Deserialize(file, deserializerType);
 
         Assert.IsNotNull(model);
         Assert.AreEqual("WorkflowData", model.Data);
@@ -71,12 +75,13 @@ public class JsonDeserializerTest
         AssertStepDefinition(model.Steps[1].Steps[2].Steps[1], "step112", null, null);
     }
 
-    [TestMethod]
-    public void DeserializeWorkflowDefinitionWithGoTo()
+    [DataTestMethod]
+    [DataRow("Dsl/JsonAssets/workflow-with-goto.json", DeserializerType.Json)]
+    [DataRow("Dsl/YamlAssets/workflow-with-goto.yaml", DeserializerType.Yaml)]
+    public void DeserializeWorkflowDefinitionWithGoTo(string filePath, DeserializerType deserializerType)
     {
-        string json = File.ReadAllText("Dsl/JsonAssets/workflow-with-goto.json");
-
-        WorkflowDefinitionModel? model = Deserializers.Json(json);
+        string file = File.ReadAllText(filePath);
+        WorkflowDefinitionModel? model = Deserialize(file, deserializerType);
 
         Assert.IsNotNull(model);
         Assert.AreEqual("WorkflowData", model.Data);
@@ -87,6 +92,16 @@ public class JsonDeserializerTest
         AssertStepDefinition(model.Steps[1], "s2", null, null);
         AssertStepDefinition(model.Steps[2], "s3", null, null);
         AssertGoToDefinition(model.Steps[3], "a1");
+    }
+
+    private WorkflowDefinitionModel? Deserialize(string data, DeserializerType deserializerType)
+    {
+        return deserializerType switch
+        {
+            DeserializerType.Json => Deserializers.Json(data),
+            DeserializerType.Yaml => Deserializers.Yaml(data),
+            _ => throw new ArgumentOutOfRangeException(nameof(deserializerType), deserializerType, null)
+        };
     }
 
     private void AssertStepDefinition(WorkflowNodeModel node, string expectedType,
