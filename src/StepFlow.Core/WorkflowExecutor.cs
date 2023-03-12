@@ -21,11 +21,6 @@ namespace StepFlow.Core
             WorkflowBuilder<TData> builder = new();
             workflow.Build(builder);
             WorkflowDefinition definition = builder.BuildDefinition();
-            await StartWorkflow(definition, data);
-        }
-
-        public async Task StartWorkflow(WorkflowDefinition definition, object? data = null)
-        {
             WorkflowGraph graph = new WorkflowGraph(definition);
             await Process(graph, data);
         }

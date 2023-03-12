@@ -7,7 +7,5 @@ namespace StepFlow.Contracts
     {
         Task StartWorkflow<TData>(IWorkflow<TData> workflow, TData? data = default)
             where TData : new();
-
-        Task StartWorkflow(WorkflowDefinition definition, object? data = null);
     }
 }
