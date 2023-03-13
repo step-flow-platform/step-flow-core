@@ -13,7 +13,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void LinearDefinition()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowStepDefinition("a1", typeof(Step1), new List<PropertyMap>(), null),
@@ -34,7 +34,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void DefinitionWithIfScenario1()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowStepDefinition("a1", typeof(Step1), new List<PropertyMap>(), null),
@@ -64,7 +64,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void DefinitionWithIfScenario2()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowIfDefinition("if1", null!,
@@ -97,7 +97,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void DefinitionWithIfScenario3()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowIfDefinition("if1", null!,
@@ -134,7 +134,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void DefinitionWithIfScenario4()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowIfDefinition("if1", null!,
@@ -175,7 +175,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void DefinitionWitGoToScenario1()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowStepDefinition("a1", typeof(Step1), new List<PropertyMap>(), null),
@@ -199,7 +199,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void DefinitionWitGoToScenario2()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowIfDefinition("if1", null!,
@@ -229,7 +229,7 @@ public class WorkflowGraphTest
     [TestMethod]
     public void DefinitionWitGoToScenario3()
     {
-        WorkflowDefinition definition = new(typeof(object),
+        WorkflowDefinition definition = new("workflow", typeof(object),
             new List<WorkflowNodeDefinition>
             {
                 new WorkflowIfDefinition("if1", null!,

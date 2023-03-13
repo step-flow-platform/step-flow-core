@@ -23,8 +23,9 @@ public class WorkflowBuilderTest
                 .Input(step => step.Property2, _ => "val2")
                 .Output(data => data.B, _ => 10));
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow-test");
 
+        Assert.AreEqual("workflow-test", definition.Name);
         Assert.AreEqual("StepFlow.Tests.Core.WorkflowBuilderTest+WorkflowData", definition.DataType.FullName);
         Assert.AreEqual(3, definition.Nodes.Count);
         WorkflowAssert.StepDefinition(definition.Nodes[0], "StepFlow.Tests.TestSteps.Step1", 0, false, "a1");
@@ -43,7 +44,7 @@ public class WorkflowBuilderTest
                 .Step<Step2>())
             .Step<Step3>();
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow");
         WorkflowIfDefinition if1Node = (WorkflowIfDefinition)definition.Nodes[1];
 
         Assert.AreEqual("StepFlow.Tests.Core.WorkflowBuilderTest+WorkflowData", definition.DataType.FullName);
@@ -68,7 +69,7 @@ public class WorkflowBuilderTest
                 .Step<Step2>())
             .Step<Step3>();
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow");
         WorkflowIfDefinition if1Node = (WorkflowIfDefinition)definition.Nodes[0];
         WorkflowIfDefinition if2Node = (WorkflowIfDefinition)definition.Nodes[1];
 
@@ -95,7 +96,7 @@ public class WorkflowBuilderTest
                         .Step<Step1>())))
             .Step<Step2>();
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow");
         WorkflowIfDefinition if1Node = (WorkflowIfDefinition)definition.Nodes[0];
         WorkflowIfDefinition if2Node = (WorkflowIfDefinition)if1Node.Nodes[0];
         WorkflowIfDefinition if3Node = (WorkflowIfDefinition)if2Node.Nodes[0];
@@ -125,7 +126,7 @@ public class WorkflowBuilderTest
                     .Step<Step2>()))
             .Step<Step3>();
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow");
         WorkflowIfDefinition if1Node = (WorkflowIfDefinition)definition.Nodes[0];
         WorkflowIfDefinition if2Node = (WorkflowIfDefinition)if1Node.Nodes[0];
         WorkflowIfDefinition if3Node = (WorkflowIfDefinition)if1Node.Nodes[1];
@@ -155,7 +156,7 @@ public class WorkflowBuilderTest
             .Step<Step3>()
             .GoTo("a1");
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow");
 
         Assert.AreEqual("StepFlow.Tests.Core.WorkflowBuilderTest+WorkflowData", definition.DataType.FullName);
         Assert.AreEqual(4, definition.Nodes.Count);
@@ -176,7 +177,7 @@ public class WorkflowBuilderTest
                 .GoTo("if1"))
             .Step<Step3>();
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow");
         WorkflowIfDefinition if1Node = (WorkflowIfDefinition)definition.Nodes[0];
 
         Assert.AreEqual("StepFlow.Tests.Core.WorkflowBuilderTest+WorkflowData", definition.DataType.FullName);
@@ -203,7 +204,7 @@ public class WorkflowBuilderTest
             .Step<Step1>(x => x
                 .Id("a2"));
 
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition("workflow");
         WorkflowIfDefinition if1Node = (WorkflowIfDefinition)definition.Nodes[0];
         WorkflowIfDefinition if2Node = (WorkflowIfDefinition)if1Node.Nodes[0];
         WorkflowIfDefinition if3Node = (WorkflowIfDefinition)if2Node.Nodes[0];

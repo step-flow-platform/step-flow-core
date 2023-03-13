@@ -15,7 +15,7 @@ public class FlowchartGeneratorTest
         WorkflowBuilder<WorkflowData> builder = new();
         Workflow workflow = new();
         workflow.Build(builder);
-        WorkflowDefinition definition = builder.BuildDefinition();
+        WorkflowDefinition definition = builder.BuildDefinition(workflow.Name);
 
         FlowchartGenerator generator = new();
         string flowchart = generator.Generate(definition);
@@ -25,6 +25,8 @@ public class FlowchartGeneratorTest
 
     private class Workflow : IWorkflow<WorkflowData>
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<WorkflowData> builder)
         {
             builder

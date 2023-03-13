@@ -27,7 +27,7 @@ public class IfWorkflowTest : WorkflowTestBase
         };
 
         IfWorkflow workflow = new();
-        workflowExecutor.StartWorkflow(workflow, workflowData);
+        workflowExecutor.Execute(workflow, workflowData);
 
         Assert.AreEqual(expectedResult, workflowData.Result);
     }
@@ -50,7 +50,7 @@ public class IfWorkflowTest : WorkflowTestBase
         };
 
         IfWorkflow2 workflow = new();
-        workflowExecutor.StartWorkflow(workflow, workflowData);
+        workflowExecutor.Execute(workflow, workflowData);
 
         Assert.AreEqual(expectedResult, workflowData.Result);
     }
@@ -73,7 +73,7 @@ public class IfWorkflowTest : WorkflowTestBase
         };
 
         IfWorkflow3 workflow = new();
-        workflowExecutor.StartWorkflow(workflow, workflowData);
+        workflowExecutor.Execute(workflow, workflowData);
 
         Assert.AreEqual(expectedResult, workflowData.Result);
     }
@@ -89,6 +89,8 @@ public class IfWorkflowTest : WorkflowTestBase
 
     private class IfWorkflow : IWorkflow<IfWorkflowData>
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<IfWorkflowData> builder)
         {
             builder
@@ -127,6 +129,8 @@ public class IfWorkflowTest : WorkflowTestBase
 
     private class IfWorkflow2 : IWorkflow<IfWorkflowData>
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<IfWorkflowData> builder)
         {
             builder
@@ -153,6 +157,8 @@ public class IfWorkflowTest : WorkflowTestBase
 
     private class IfWorkflow3 : IWorkflow<IfWorkflowData>
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<IfWorkflowData> builder)
         {
             builder

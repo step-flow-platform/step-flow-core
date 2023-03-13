@@ -48,10 +48,10 @@ internal class WorkflowBuilder<TData> : IWorkflowBuilder<TData>
         _nodes.Add(goToBuilder);
     }
 
-    public WorkflowDefinition BuildDefinition()
+    public WorkflowDefinition BuildDefinition(string name)
     {
         IEnumerable<WorkflowNodeDefinition> nodeDefinitions = _nodes.Select(x => x.Build());
-        return new WorkflowDefinition(typeof(TData), nodeDefinitions.ToList());
+        return new WorkflowDefinition(name, typeof(TData), nodeDefinitions.ToList());
     }
 
     private readonly List<IWorkflowNodeBuilder> _nodes = new();

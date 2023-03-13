@@ -17,7 +17,7 @@ public class LinearWorkflowTest : WorkflowTestBase
 
         LinearWorkflowData workflowData = new();
         LinearWorkflow workflow = new();
-        workflowExecutor.StartWorkflow(workflow, workflowData);
+        workflowExecutor.Execute(workflow, workflowData);
 
         Assert.AreEqual(4, workflowData.Value);
     }
@@ -29,6 +29,8 @@ public class LinearWorkflowTest : WorkflowTestBase
 
     private class LinearWorkflow : IWorkflow<LinearWorkflowData>
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<LinearWorkflowData> builder)
         {
             builder

@@ -26,7 +26,7 @@ public class GoToWorkflowTest : WorkflowTestBase
         };
 
         GoToWorkflow workflow = new();
-        workflowExecutor.StartWorkflow(workflow, workflowData);
+        workflowExecutor.Execute(workflow, workflowData);
 
         Assert.AreEqual(expectedResult, workflowData.Result);
     }
@@ -49,7 +49,7 @@ public class GoToWorkflowTest : WorkflowTestBase
         };
 
         GoToWorkflow2 workflow = new();
-        workflowExecutor.StartWorkflow(workflow, workflowData);
+        workflowExecutor.Execute(workflow, workflowData);
 
         Assert.AreEqual(expectedResult, workflowData.Result);
     }
@@ -65,6 +65,8 @@ public class GoToWorkflowTest : WorkflowTestBase
 
     private class GoToWorkflow : IWorkflow<GoToWorkflowData>
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<GoToWorkflowData> builder)
         {
             builder
@@ -108,6 +110,8 @@ public class GoToWorkflowTest : WorkflowTestBase
 
     private class GoToWorkflow2 : IWorkflow<GoToWorkflowData>
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<GoToWorkflowData> builder)
         {
             builder

@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddStepFlow(this IServiceCollection services)
     {
         services.AddSingleton<IWorkflowExecutor, WorkflowExecutor>();
+        services.AddSingleton<IWorkflowHost, WorkflowHost>();
         return services;
     }
 }

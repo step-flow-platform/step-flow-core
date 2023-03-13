@@ -39,7 +39,7 @@ internal class WorkflowDefinitionLoader : IWorkflowDefinitionLoader
         }
 
         List<WorkflowNodeDefinition> nodes = model.Steps.Select(x => ConvertNode(x, dataType)).ToList();
-        WorkflowDefinition definition = new(dataType, nodes);
+        WorkflowDefinition definition = new(model.Name, dataType, nodes);
         return definition;
     }
 

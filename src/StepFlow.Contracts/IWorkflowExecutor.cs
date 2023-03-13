@@ -5,7 +5,9 @@ namespace StepFlow.Contracts
 {
     public interface IWorkflowExecutor
     {
-        Task StartWorkflow<TData>(IWorkflow<TData> workflow, TData? data = default)
+        Task Start(WorkflowDefinition definition, object? data = null);
+
+        Task Execute<TData>(IWorkflow<TData> workflow, TData? data = default)
             where TData : new();
     }
 }

@@ -16,11 +16,13 @@ public class WorkflowWithoutDataTest : WorkflowTestBase
         IWorkflowExecutor workflowExecutor = serviceProvider.GetService<IWorkflowExecutor>()!;
 
         WorkflowWithoutData workflowWithoutData = new();
-        workflowExecutor.StartWorkflow(workflowWithoutData);
+        workflowExecutor.Execute(workflowWithoutData);
     }
 
     private class WorkflowWithoutData : IWorkflow
     {
+        public string Name => "Workflow";
+
         public void Build(IWorkflowBuilder<object> builder)
         {
             builder

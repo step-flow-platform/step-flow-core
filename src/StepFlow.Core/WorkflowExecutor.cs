@@ -15,12 +15,18 @@ namespace StepFlow.Core
             _serviceProvider = serviceProvider;
         }
 
-        public async Task StartWorkflow<TData>(IWorkflow<TData> workflow, TData? data = default)
+        public async Task Start(WorkflowDefinition definition, object? data = null)
+        {
+            WorkflowGraph graph = new WorkflowGraph(definition);
+            await Process(graph, data);
+        }
+
+        public async Task Execute<TData>(IWorkflow<TData> workflow, TData? data = default)
             where TData : new()
         {
             WorkflowBuilder<TData> builder = new();
             workflow.Build(builder);
-            WorkflowDefinition definition = builder.BuildDefinition();
+            WorkflowDefinition definition = builder.BuildDefinition(workflow.Name);
             WorkflowGraph graph = new WorkflowGraph(definition);
             await Process(graph, data);
         }
