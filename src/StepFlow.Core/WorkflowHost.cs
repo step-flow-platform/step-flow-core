@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +14,7 @@ internal class WorkflowHost : IWorkflowHost
     public WorkflowHost(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        _definitions = new Dictionary<string, WorkflowDefinition>();
+        _definitions = new ConcurrentDictionary<string, WorkflowDefinition>();
     }
 
     public event EventHandler<string>? WorkflowCompleted;
@@ -59,9 +60,9 @@ internal class WorkflowHost : IWorkflowHost
             throw new StepFlowException($"Workflow '{definition.Name}' is already registered");
         }
 
-        _definitions.Add(definition.Name, definition);
+        _definitions.TryAdd(definition.Name, definition);
     }
 
     private readonly IServiceProvider _serviceProvider;
-    private readonly Dictionary<string, WorkflowDefinition> _definitions;
+    private readonly ConcurrentDictionary<string, WorkflowDefinition> _definitions;
 }
