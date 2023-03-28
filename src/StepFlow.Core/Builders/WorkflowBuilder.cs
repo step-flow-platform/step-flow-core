@@ -50,7 +50,9 @@ internal class WorkflowBuilder<TData> : IWorkflowBuilder<TData>
 
     public IWorkflowBuilder<TData> WaitForEvent(string eventName)
     {
-        throw new NotImplementedException();
+        this.Step<WaitEventStep>(x => x
+            .Input(step => step.EventName, _ => eventName));
+        return this;
     }
 
     public WorkflowDefinition BuildDefinition(string name)
