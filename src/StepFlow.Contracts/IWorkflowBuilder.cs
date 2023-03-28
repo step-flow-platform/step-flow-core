@@ -19,4 +19,6 @@ public interface IWorkflowBuilder<TData>
         Action<IWorkflowBuilder<TData>> ifBuilderAction);
 
     void GoTo(string nodeId);
+
+    IWorkflowBuilder<TData> WaitForEvent(string eventName);
 }

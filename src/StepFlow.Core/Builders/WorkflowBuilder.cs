@@ -48,6 +48,11 @@ internal class WorkflowBuilder<TData> : IWorkflowBuilder<TData>
         _nodes.Add(goToBuilder);
     }
 
+    public IWorkflowBuilder<TData> WaitForEvent(string eventName)
+    {
+        throw new NotImplementedException();
+    }
+
     public WorkflowDefinition BuildDefinition(string name)
     {
         IEnumerable<WorkflowNodeDefinition> nodeDefinitions = _nodes.Select(x => x.Build());

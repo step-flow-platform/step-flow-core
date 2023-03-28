@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using StepFlow.Contracts;
@@ -44,6 +43,11 @@ internal class WorkflowHost : IWorkflowHost
         });
 
         return runningId;
+    }
+
+    public void PublishEvent(string eventName)
+    {
+        throw new NotImplementedException();
     }
 
     private void SaveWorkflow<TWorkflow, TData>()

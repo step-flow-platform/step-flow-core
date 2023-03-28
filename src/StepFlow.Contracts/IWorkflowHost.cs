@@ -14,4 +14,6 @@ public interface IWorkflowHost
         where TWorkflow : IWorkflow<TData>;
 
     public string RunWorkflow(string name, object? data = null);
+
+    public void PublishEvent(string eventName);
 }
