@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IWorkflowExecutor, WorkflowExecutor>();
         services.AddSingleton<IWorkflowHost, WorkflowHost>();
+        services.AddSingleton<WorkflowEventsDispatcher>();
         services.AddTransient<WaitEventStep>();
         return services;
     }

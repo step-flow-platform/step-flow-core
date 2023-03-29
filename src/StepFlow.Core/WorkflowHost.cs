@@ -47,7 +47,8 @@ internal class WorkflowHost : IWorkflowHost
 
     public void PublishEvent(string eventName)
     {
-        throw new NotImplementedException();
+        WorkflowEventsDispatcher eventsDispatcher = _serviceProvider.GetService<WorkflowEventsDispatcher>()!;
+        eventsDispatcher.Publish(eventName);
     }
 
     private void SaveWorkflow<TWorkflow, TData>()

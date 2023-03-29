@@ -50,7 +50,7 @@ internal class WorkflowBuilder<TData> : IWorkflowBuilder<TData>
 
     public IWorkflowBuilder<TData> WaitForEvent(string eventName)
     {
-        this.Step<WaitEventStep>(x => x
+        Step<WaitEventStep>(x => x
             .Input(step => step.EventName, _ => eventName));
         return this;
     }
