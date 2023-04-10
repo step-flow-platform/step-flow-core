@@ -1,6 +1,6 @@
 namespace StepFlow.Core.Graph;
 
-public enum WorkflowNodeType
+internal enum WorkflowNodeType
 {
     Step,
     If,

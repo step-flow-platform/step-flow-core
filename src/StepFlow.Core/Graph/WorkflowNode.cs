@@ -3,7 +3,7 @@ using StepFlow.Contracts.Definition;
 
 namespace StepFlow.Core.Graph;
 
-public class WorkflowNode
+internal class WorkflowNode
 {
     public WorkflowNode(string id, WorkflowNodeType nodeType, WorkflowNodeDefinition definition)
     {

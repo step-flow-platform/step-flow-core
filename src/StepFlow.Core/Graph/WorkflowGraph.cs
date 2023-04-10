@@ -6,7 +6,7 @@ using StepFlow.Contracts.Definition;
 
 namespace StepFlow.Core.Graph;
 
-public class WorkflowGraph
+internal class WorkflowGraph
 {
     public WorkflowGraph(WorkflowDefinition workflowDefinition)
     {
