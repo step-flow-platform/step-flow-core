@@ -18,5 +18,8 @@ jobs:
     - name: Pack
       run: dotnet pack -c Release -o out
     
-    - name: Publish
-      run: dotnet nuget push ./out/StepFlow.0.0.1.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_ORG_TOKEN}}
+    - name: Publish StepFlow
+      run: dotnet nuget push ./out/StepFlow.0.0.*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_ORG_TOKEN}}
+
+    - name: Publish StepFlow.Contracts
+      run: dotnet nuget push ./out/StepFlow.Contracts.0.0.*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_ORG_TOKEN}}
