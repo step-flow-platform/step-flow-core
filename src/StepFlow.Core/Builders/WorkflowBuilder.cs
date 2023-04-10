@@ -55,6 +55,14 @@ internal class WorkflowBuilder<TData> : IWorkflowBuilder<TData>
         return this;
     }
 
+    public IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventDataProperty)
+    {
+        Step<WaitEventStep>(x => x
+            .Input(step => step.EventName, _ => eventName)
+            .Output(eventDataProperty, step => step.EventData));
+        return this;
+    }
+
     public WorkflowDefinition BuildDefinition(string name)
     {
         IEnumerable<WorkflowNodeDefinition> nodeDefinitions = _nodes.Select(x => x.Build());

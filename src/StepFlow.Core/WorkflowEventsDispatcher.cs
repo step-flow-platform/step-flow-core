@@ -6,21 +6,22 @@ namespace StepFlow.Core;
 
 internal class WorkflowEventsDispatcher
 {
-    public void Publish(string eventName)
+    public void Publish(string eventName, string? eventData)
     {
-        _publishedEvents[eventName] = DateTime.UtcNow;
+        WorkflowEvent @event = new(eventName, DateTime.UtcNow, eventData);
+        _publishedEvents[@event.EventName] = @event;
     }
 
-    public async Task WaitEvent(string eventName)
+    public async Task<WorkflowEvent> WaitEvent(string eventName)
     {
         DateTime startWaitTime = DateTime.UtcNow;
         while (true)
         {
-            if (_publishedEvents.TryGetValue(eventName, out DateTime publishTime))
+            if (_publishedEvents.TryGetValue(eventName, out WorkflowEvent @event))
             {
-                if (publishTime > startWaitTime)
+                if (@event.PublishDateTime > startWaitTime)
                 {
-                    return;
+                    return @event;
                 }
             }
 
@@ -28,5 +29,5 @@ internal class WorkflowEventsDispatcher
         }
     }
 
-    private readonly ConcurrentDictionary<string, DateTime> _publishedEvents = new();
+    private readonly ConcurrentDictionary<string, WorkflowEvent> _publishedEvents = new();
 }

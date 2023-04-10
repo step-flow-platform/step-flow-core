@@ -21,4 +21,6 @@ public interface IWorkflowBuilder<TData>
     void GoTo(string nodeId);
 
     IWorkflowBuilder<TData> WaitForEvent(string eventName);
+
+    IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventDataProperty);
 }

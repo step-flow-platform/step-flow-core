@@ -23,15 +23,38 @@ public class PublishWorkflowEventTest : WorkflowTestBase
         await Task.Delay(300);
         Assert.AreEqual(1, data.Value);
 
-        host.PublishEvent("SomeEvent");
+        host.PublishEvent("SomeEvent", null);
         await Task.Delay(300);
 
         Assert.AreEqual(2, data.Value);
+        Assert.IsNull(data.EventData);
+    }
+
+    [TestMethod]
+    public async Task RunWorkflowWithWaitEventWithData()
+    {
+        IServiceProvider serviceProvider = ConfigureServices();
+        IWorkflowHost host = serviceProvider.GetService<IWorkflowHost>()!;
+
+        host.RegisterWorkflow<Workflow2, WorkflowData>();
+        WorkflowData data = new();
+        host.RunWorkflow("Workflow2", data);
+
+        await Task.Delay(300);
+        Assert.AreEqual(1, data.Value);
+
+        host.PublishEvent("SomeEvent2", "event data string");
+        await Task.Delay(300);
+
+        Assert.AreEqual(2, data.Value);
+        Assert.AreEqual("event data string", data.EventData);
     }
 
     private class WorkflowData
     {
         public int Value { get; set; } = default;
+
+        public string? EventData { get; set; } = default;
     }
 
     private class Workflow : IWorkflow<WorkflowData>
@@ -45,6 +68,23 @@ public class PublishWorkflowEventTest : WorkflowTestBase
                     .Input(step => step.Value, _ => 0)
                     .Output(data => data.Value, step => step.IncrementedValue))
                 .WaitForEvent("SomeEvent")
+                .Step<IncrementStep>(x => x
+                    .Input(step => step.Value, data => data.Value)
+                    .Output(data => data.Value, step => step.IncrementedValue));
+        }
+    }
+
+    private class Workflow2 : IWorkflow<WorkflowData>
+    {
+        public string Name => "Workflow2";
+
+        public void Build(IWorkflowBuilder<WorkflowData> builder)
+        {
+            builder
+                .Step<IncrementStep>(x => x
+                    .Input(step => step.Value, _ => 0)
+                    .Output(data => data.Value, step => step.IncrementedValue))
+                .WaitForEvent("SomeEvent2", data => data.EventData)
                 .Step<IncrementStep>(x => x
                     .Input(step => step.Value, data => data.Value)
                     .Output(data => data.Value, step => step.IncrementedValue));

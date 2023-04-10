@@ -15,5 +15,5 @@ public interface IWorkflowHost
 
     public string RunWorkflow(string name, object? data = null);
 
-    public void PublishEvent(string eventName);
+    public void PublishEvent(string eventName, string? eventData);
 }

@@ -12,6 +12,8 @@ internal class WaitEventStep : IStep
 
     public string? EventName { get; set; }
 
+    public string? EventData { get; private set; }
+
     public async Task ExecuteAsync()
     {
         if (string.IsNullOrWhiteSpace(EventName))
@@ -19,7 +21,8 @@ internal class WaitEventStep : IStep
             throw new StepFlowException("Incorrect EventName");
         }
 
-        await _eventsDispatcher.WaitEvent(EventName);
+        WorkflowEvent @event = await _eventsDispatcher.WaitEvent(EventName);
+        EventData = @event.EventData;
     }
 
     private readonly WorkflowEventsDispatcher _eventsDispatcher;
