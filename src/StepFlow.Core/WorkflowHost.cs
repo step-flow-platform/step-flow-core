@@ -45,10 +45,10 @@ internal class WorkflowHost : IWorkflowHost
         return runningId;
     }
 
-    public void PublishEvent(string eventName, string? eventData)
+    public void PublishEvent(string eventName, string? eventKey = null, string? eventData = null)
     {
         WorkflowEventsDispatcher eventsDispatcher = _serviceProvider.GetService<WorkflowEventsDispatcher>()!;
-        eventsDispatcher.Publish(eventName, eventData);
+        eventsDispatcher.Publish(eventName, eventKey, eventData);
     }
 
     private void SaveWorkflow<TWorkflow, TData>()

@@ -6,18 +6,20 @@ namespace StepFlow.Core;
 
 internal class WorkflowEventsDispatcher
 {
-    public void Publish(string eventName, string? eventData)
+    public void Publish(string eventName, string? eventKey, string? eventData)
     {
-        WorkflowEvent @event = new(eventName, DateTime.UtcNow, eventData);
-        _publishedEvents[@event.EventName] = @event;
+        WorkflowEvent @event = new(eventName, eventKey, DateTime.UtcNow, eventData);
+        string eventId = MakeEventId(@event.EventName, @event.EventKey);
+        _publishedEvents[eventId] = @event;
     }
 
-    public async Task<WorkflowEvent> WaitEvent(string eventName)
+    public async Task<WorkflowEvent> WaitEvent(string eventName, string? eventKey)
     {
         DateTime startWaitTime = DateTime.UtcNow;
+        string eventId = MakeEventId(eventName, eventKey);
         while (true)
         {
-            if (_publishedEvents.TryGetValue(eventName, out WorkflowEvent @event))
+            if (_publishedEvents.TryGetValue(eventId, out WorkflowEvent @event))
             {
                 if (@event.PublishDateTime > startWaitTime)
                 {
@@ -27,6 +29,11 @@ internal class WorkflowEventsDispatcher
 
             await Task.Delay(50);
         }
+    }
+
+    private string MakeEventId(string eventName, string? eventKey)
+    {
+        return eventKey is null ? eventName : $"{eventName}:::{eventKey}";
     }
 
     private readonly ConcurrentDictionary<string, WorkflowEvent> _publishedEvents = new();

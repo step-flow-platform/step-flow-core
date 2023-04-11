@@ -12,6 +12,8 @@ internal class WaitEventStep : IStep
 
     public string? EventName { get; set; }
 
+    public string? EventKey { get; set; }
+
     public string? EventData { get; private set; }
 
     public async Task ExecuteAsync()
@@ -21,7 +23,7 @@ internal class WaitEventStep : IStep
             throw new StepFlowException("Incorrect EventName");
         }
 
-        WorkflowEvent @event = await _eventsDispatcher.WaitEvent(EventName);
+        WorkflowEvent @event = await _eventsDispatcher.WaitEvent(EventName, EventKey);
         EventData = @event.EventData;
     }
 

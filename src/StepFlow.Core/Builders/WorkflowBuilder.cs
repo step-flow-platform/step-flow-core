@@ -55,10 +55,20 @@ internal class WorkflowBuilder<TData> : IWorkflowBuilder<TData>
         return this;
     }
 
-    public IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventDataProperty)
+    public IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventKey)
     {
         Step<WaitEventStep>(x => x
             .Input(step => step.EventName, _ => eventName)
+            .Input(step => step.EventKey, eventKey));
+        return this;
+    }
+
+    public IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventKey,
+        Expression<Func<TData, string?>> eventDataProperty)
+    {
+        Step<WaitEventStep>(x => x
+            .Input(step => step.EventName, _ => eventName)
+            .Input(step => step.EventKey, eventKey)
             .Output(eventDataProperty, step => step.EventData));
         return this;
     }

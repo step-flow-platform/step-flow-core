@@ -23,7 +23,7 @@ public class PublishWorkflowEventTest : WorkflowTestBase
         await Task.Delay(300);
         Assert.AreEqual(1, data.Value);
 
-        host.PublishEvent("SomeEvent", null);
+        host.PublishEvent("SomeEvent");
         await Task.Delay(300);
 
         Assert.AreEqual(2, data.Value);
@@ -43,7 +43,11 @@ public class PublishWorkflowEventTest : WorkflowTestBase
         await Task.Delay(300);
         Assert.AreEqual(1, data.Value);
 
-        host.PublishEvent("SomeEvent2", "event data string");
+        host.PublishEvent("SomeEvent2");
+        await Task.Delay(300);
+        Assert.AreEqual(1, data.Value);
+
+        host.PublishEvent("SomeEvent2", "SomeKey", "event data string");
         await Task.Delay(300);
 
         Assert.AreEqual(2, data.Value);
@@ -53,6 +57,8 @@ public class PublishWorkflowEventTest : WorkflowTestBase
     private class WorkflowData
     {
         public int Value { get; set; } = default;
+
+        public string EventKey { get; set; } = "SomeKey";
 
         public string? EventData { get; set; } = default;
     }
@@ -84,7 +90,7 @@ public class PublishWorkflowEventTest : WorkflowTestBase
                 .Step<IncrementStep>(x => x
                     .Input(step => step.Value, _ => 0)
                     .Output(data => data.Value, step => step.IncrementedValue))
-                .WaitForEvent("SomeEvent2", data => data.EventData)
+                .WaitForEvent("SomeEvent2", data => data.EventKey, data => data.EventData)
                 .Step<IncrementStep>(x => x
                     .Input(step => step.Value, data => data.Value)
                     .Output(data => data.Value, step => step.IncrementedValue));

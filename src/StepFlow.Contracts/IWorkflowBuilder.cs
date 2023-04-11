@@ -22,5 +22,8 @@ public interface IWorkflowBuilder<TData>
 
     IWorkflowBuilder<TData> WaitForEvent(string eventName);
 
-    IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventDataProperty);
+    IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventKey);
+
+    IWorkflowBuilder<TData> WaitForEvent(string eventName, Expression<Func<TData, string?>> eventKey,
+        Expression<Func<TData, string?>> eventDataProperty);
 }
