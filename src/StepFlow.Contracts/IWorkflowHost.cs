@@ -4,16 +4,18 @@ namespace StepFlow.Contracts;
 
 public interface IWorkflowHost
 {
-    public event EventHandler<string> WorkflowCompleted;
+    event EventHandler<string> WorkflowCompleted;
 
-    public void RegisterWorkflow<TWorkflow>()
+    event EventHandler<WorkflowEvent> EventPublished;
+
+    void RegisterWorkflow<TWorkflow>()
         where TWorkflow : IWorkflow;
 
-    public void RegisterWorkflow<TWorkflow, TData>()
+    void RegisterWorkflow<TWorkflow, TData>()
         where TData : new()
         where TWorkflow : IWorkflow<TData>;
 
-    public string RunWorkflow(string name, object? data = null);
+    string RunWorkflow(string name, object? data = null);
 
-    public void PublishEvent(string eventName, string? eventKey = null, string? eventData = null);
+    void PublishEvent(string eventName, string? eventKey = null, string? eventData = null);
 }

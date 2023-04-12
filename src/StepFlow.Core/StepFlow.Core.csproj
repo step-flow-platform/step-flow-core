@@ -6,7 +6,7 @@
     <LangVersion>latest</LangVersion>
 
     <PackageId>StepFlow</PackageId>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <Authors>Mikhail Doshevsky</Authors>
   </PropertyGroup>
 

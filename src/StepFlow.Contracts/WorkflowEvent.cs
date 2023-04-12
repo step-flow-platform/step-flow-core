@@ -1,6 +1,6 @@
 using System;
 
-namespace StepFlow.Core;
+namespace StepFlow.Contracts;
 
 public record WorkflowEvent(
     string EventName,

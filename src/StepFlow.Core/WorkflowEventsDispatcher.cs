@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using StepFlow.Contracts;
 
 namespace StepFlow.Core;
 
 internal class WorkflowEventsDispatcher
 {
-    public void Publish(string eventName, string? eventKey, string? eventData)
+    public WorkflowEvent Publish(string eventName, string? eventKey, string? eventData)
     {
         WorkflowEvent @event = new(eventName, eventKey, DateTime.UtcNow, eventData);
         string eventId = MakeEventId(@event.EventName, @event.EventKey);
         _publishedEvents[eventId] = @event;
+        return @event;
     }
 
     public async Task<WorkflowEvent> WaitEvent(string eventName, string? eventKey)

@@ -18,6 +18,8 @@ internal class WorkflowHost : IWorkflowHost
 
     public event EventHandler<string>? WorkflowCompleted;
 
+    public event EventHandler<WorkflowEvent>? EventPublished;
+
     public void RegisterWorkflow<TWorkflow>()
         where TWorkflow : IWorkflow
     {
@@ -48,7 +50,8 @@ internal class WorkflowHost : IWorkflowHost
     public void PublishEvent(string eventName, string? eventKey = null, string? eventData = null)
     {
         WorkflowEventsDispatcher eventsDispatcher = _serviceProvider.GetService<WorkflowEventsDispatcher>()!;
-        eventsDispatcher.Publish(eventName, eventKey, eventData);
+        WorkflowEvent @event = eventsDispatcher.Publish(eventName, eventKey, eventData);
+        EventPublished?.Invoke(this, @event);
     }
 
     private void SaveWorkflow<TWorkflow, TData>()

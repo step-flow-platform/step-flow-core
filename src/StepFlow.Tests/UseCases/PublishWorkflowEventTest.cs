@@ -54,6 +54,24 @@ public class PublishWorkflowEventTest : WorkflowTestBase
         Assert.AreEqual("event data string", data.EventData);
     }
 
+    [TestMethod]
+    public async Task PublishAndSubscribeToEventsViaHost()
+    {
+        IServiceProvider serviceProvider = ConfigureServices();
+        IWorkflowHost host = serviceProvider.GetService<IWorkflowHost>()!;
+
+        WorkflowEvent? workflowEvent = null;
+        host.EventPublished += (_, e) => workflowEvent = e;
+
+        host.PublishEvent("My Event", "My Key", "some data from event");
+        await Task.Delay(300);
+
+        Assert.IsNotNull(workflowEvent);
+        Assert.AreEqual("My Event", workflowEvent.EventName);
+        Assert.AreEqual("My Key", workflowEvent.EventKey);
+        Assert.AreEqual("some data from event", workflowEvent.EventData);
+    }
+
     private class WorkflowData
     {
         public int Value { get; set; } = default;
